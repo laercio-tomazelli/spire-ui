@@ -9,6 +9,7 @@
 - **Zero Dependencies**: No external runtime dependencies
 - **Laravel-First**: Designed for seamless Laravel Blade integration
 - **TypeScript**: Strict type safety throughout
+- **Modular Architecture**: Each component in its own file for maintainability
 - **Vanilla JS**: No framework lock-in, pure DOM manipulation
 - **Progressive Enhancement**: Works without JavaScript, enhanced with it
 
@@ -18,72 +19,147 @@
 spire-ui/
 ├── resources/
 │   ├── js/
-│   │   └── spire-ui.ts          # Main TypeScript library (~6500 lines)
+│   │   ├── spire-ui.ts              # Legacy monolithic file (deprecated)
+│   │   └── spire/                   # ⭐ MODULAR STRUCTURE (use this!)
+│   │       ├── index.ts             # Main entry point
+│   │       ├── types.ts             # All TypeScript interfaces
+│   │       ├── core/
+│   │       │   ├── index.ts         # Core re-exports
+│   │       │   └── registry.ts      # instances WeakMap, emit helper
+│   │       ├── components/          # 31 components (one per file)
+│   │       │   ├── index.ts         # Component re-exports
+│   │       │   ├── Button.ts
+│   │       │   ├── Modal.ts
+│   │       │   ├── Tabs.ts
+│   │       │   └── ...
+│   │       └── utilities/           # 11 utility modules
+│   │           ├── index.ts         # Utility re-exports
+│   │           ├── Toast.ts
+│   │           ├── Confirm.ts
+│   │           ├── Http.ts
+│   │           └── ...
 │   ├── css/
-│   │   └── app.css              # Tailwind CSS entry point
+│   │   └── app.css                  # Tailwind CSS v4 entry point
 │   └── views/
 │       ├── components/
 │       │   ├── layouts/
 │       │   │   └── app.blade.php    # Main layout with @vite and @stack('scripts')
-│       │   └── ui/                   # 50+ Blade components
+│       │   └── ui/                  # 50+ Blade components
 │       │       ├── button.blade.php
 │       │       ├── modal.blade.php
-│       │       ├── tabs.blade.php
 │       │       └── ...
-│       └── welcome.blade.php     # Demo/showcase page
-├── public/build/                 # Vite compiled assets
-├── vite.config.js               # Vite configuration
-├── tsconfig.json                # TypeScript strict mode config
-└── vitest.config.ts             # Unit testing configuration
+│       └── welcome.blade.php        # Demo/showcase page
+├── public/build/                    # Vite compiled assets
+├── vite.config.js                   # Vite configuration
+├── tsconfig.json                    # TypeScript strict mode config
+└── vitest.config.ts                 # Unit testing configuration
 ```
 
 ## 🏗️ Architecture
 
-### TypeScript Core (`spire-ui.ts`)
+### Modular TypeScript Structure (`resources/js/spire/`)
 
-The library follows a component-based architecture with a central registry:
+> ⚠️ **MANDATORY**: All new components MUST be created in the modular structure.
+> Do NOT add code to the legacy `spire-ui.ts` file.
 
-```typescript
-// Global API exposed as window.SpireUI and window.$v
-interface SpireUIAPI {
-  init(): void;                              // Initialize all components
-  get<T>(el: HTMLElement): T | undefined;    // Get component instance
-  toast: ToastAPI;                           // Toast notifications
-  modal: ModalAPI;                           // Modal dialogs
-  confirm: ConfirmAPI;                       // Confirmation dialogs
-  // ... other utilities
-}
+The library follows a modular component-based architecture:
 
-// Component instances are stored in a WeakMap
-const instances = new WeakMap<HTMLElement, SpireUIInstance>();
+```
+spire/
+├── index.ts          # Main entry - exports everything
+├── types.ts          # All interfaces (SpireUIInstance, etc.)
+├── core/
+│   └── registry.ts   # instances WeakMap, emit() helper, globalErrorHandler
+├── components/       # One file per component
+│   ├── index.ts      # Re-exports all components
+│   ├── Button.ts
+│   ├── Modal.ts
+│   └── ...
+└── utilities/        # Shared utilities
+    ├── index.ts      # Re-exports all utilities
+    ├── Toast.ts
+    ├── Http.ts
+    └── ...
 ```
 
-### Component Pattern
+### Component File Template
 
-Each component follows this pattern:
+Each component MUST follow this pattern in its own file:
 
 ```typescript
-class ComponentName implements SpireUIInstance {
-  private el: HTMLElement;
+// resources/js/spire/components/ComponentName.ts
+
+import { ComponentNameInstance } from '../types';
+import { instances, emit } from '../core/registry';
+
+export class ComponentName implements ComponentNameInstance {
+  #el: HTMLElement;
   
   constructor(el: HTMLElement) {
-    this.el = el;
-    this.init();
+    this.#el = el;
+    this.#init();
+    instances.set(el, this);  // Register instance
   }
   
-  private init(): void {
+  #init(): void {
     // Setup event listeners and initial state
   }
   
-  // Public API methods
+  // Public API methods (chainable)
   public methodName(): this {
     // Implementation
-    return this; // Chainable
+    emit(this.#el, 'componentname:event', { data });
+    return this;
   }
   
   public destroy(): void {
     // Cleanup event listeners
+    instances.delete(this.#el);
   }
+}
+```
+
+### Registering New Components
+
+After creating the component file:
+
+1. **Add interface to `types.ts`**:
+```typescript
+export interface ComponentNameInstance extends SpireUIInstance {
+  methodName(): this;
+  // ... other methods
+}
+```
+
+2. **Export from `components/index.ts`**:
+```typescript
+export { ComponentName } from './ComponentName';
+```
+
+3. **Re-export from `index.ts`** (main entry):
+```typescript
+export { ComponentName } from './components/ComponentName';
+```
+
+### Global API (window.SpireUI / window.$v)
+
+```typescript
+interface SpireUIAPI {
+  init(): void;                              // Initialize all components
+  get<T>(el: HTMLElement): T | undefined;    // Get component instance
+  toast: ToastManager;                       // Toast notifications
+  confirm(options): Promise<boolean>;        // Confirmation dialogs
+  shortcuts: KeyboardShortcutsManager;       // Keyboard shortcuts
+  command: CommandPaletteInstance;           // Command palette
+  events: EventBusManager;                   // Event bus
+  http: HttpClient;                          // HTTP client
+  currency: CurrencyManager;                 // Currency formatting
+  mask: MaskManager;                         // Input masks
+  perf: PerfManager;                         // Performance monitoring
+  a11y: A11yManager;                         // Accessibility helpers
+  debounce<T>(fn: T, delay: number): T;
+  throttle<T>(fn: T, limit: number): T;
+  onError(handler: ErrorHandler): void;
 }
 ```
 
@@ -151,12 +227,15 @@ Components use `data-v` attribute for binding:
 
 ## 📝 Coding Guidelines
 
-### TypeScript
-1. **Strict Mode**: All code must pass `strict: true`
-2. **No Any**: Avoid `any` type, use `unknown` if needed
-3. **Interfaces**: Define interfaces for all component instances
-4. **Private Methods**: Prefix with underscore convention or use `private`
-5. **Return Types**: Explicit return types on all public methods
+### TypeScript (MANDATORY for new components)
+1. **Modular Files**: One component per file in `spire/components/`
+2. **Strict Mode**: All code must pass `strict: true`
+3. **No Any**: Avoid `any` type, use `unknown` if needed
+4. **Interfaces**: Define interfaces in `types.ts` for all component instances
+5. **Private Fields**: Use `#privateField` syntax (not `private` keyword)
+6. **Return Types**: Explicit return types on all public methods
+7. **Registry**: Always call `instances.set(el, this)` in constructor
+8. **Events**: Use `emit()` helper from core/registry for custom events
 
 ### Blade Components
 1. **Props**: Always define `@props([])` at the top
@@ -226,12 +305,15 @@ document.querySelectorAll('[data-v="component"]').forEach(el => {
 
 ### DON'T
 - ❌ Add external dependencies
+- ❌ Add new code to legacy `spire-ui.ts` (use modular structure)
 - ❌ Use inline styles (prefer Tailwind classes)
 - ❌ Mutate DOM excessively
 - ❌ Use `setTimeout` for animations (use CSS)
 - ❌ Forget to handle disabled/readonly states
 - ❌ Ignore accessibility (ARIA, keyboard nav)
 - ❌ Use PHP calculations inside `{{ }}` (move to `@php` block)
+- ❌ Forget to register instance in WeakMap
+- ❌ Forget to cleanup in `destroy()` method
 
 ## 🧪 Testing
 
@@ -288,10 +370,26 @@ $v.toast.info('Hello!')
 
 ## 🎯 When Adding New Components
 
-1. Create TypeScript class in `spire-ui.ts`
-2. Add interface extending `SpireUIInstance`
-3. Register in `Components` object
-4. Create Blade component in `resources/views/components/ui/`
-5. Add example in `welcome.blade.php`
-6. Update this documentation
-7. Run tests and verify bundle size
+> ⚠️ **MANDATORY**: Follow the modular structure. Never add to the legacy monolithic file.
+
+1. **Create TypeScript class** in `resources/js/spire/components/ComponentName.ts`
+   - Use `#privateField` syntax for private properties
+   - Import `instances` and `emit` from `../core/registry`
+   - Call `instances.set(el, this)` in constructor
+   - Implement `destroy()` method with cleanup
+
+2. **Add interface** to `resources/js/spire/types.ts`
+   - Extend `SpireUIInstance`
+   - Document all public methods
+
+3. **Export from index files**:
+   - Add to `components/index.ts`
+   - Add to main `index.ts`
+
+4. **Create Blade component** in `resources/views/components/ui/`
+
+5. **Add example** in `welcome.blade.php`
+
+6. **Update documentation** if needed
+
+7. **Run tests** and verify bundle size stays under 30KB gzip
