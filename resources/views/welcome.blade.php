@@ -1147,13 +1147,18 @@
                                 #demo-sidebar.sidebar-collapsed .sidebar-logo-full { display: none; }
                                 #demo-sidebar.sidebar-collapsed .sidebar-header { justify-content: center; }
                                 #demo-sidebar.sidebar-collapsed .sidebar-toggle-btn { margin: 0; }
-                                #demo-sidebar.sidebar-collapsed .sidebar-item { justify-content: center; position: relative; }
+                                #demo-sidebar.sidebar-collapsed .sidebar-item { justify-content: center; }
                                 
-                                /* Tooltips - escondidos por padrão */
+                                /* Tooltips - sempre escondidos quando sidebar expandida */
                                 .sidebar-tooltip {
+                                    display: none;
+                                }
+                                
+                                /* Tooltips laterais no modo collapsed */
+                                #demo-sidebar.sidebar-collapsed .sidebar-tooltip {
+                                    display: block;
                                     position: absolute;
-                                    left: 100%;
-                                    margin-left: 1rem;
+                                    left: 4.5rem;
                                     top: 50%;
                                     transform: translateY(-50%);
                                     padding: 0.375rem 0.75rem;
@@ -1164,26 +1169,19 @@
                                     white-space: nowrap;
                                     border-radius: 0.375rem;
                                     opacity: 0;
-                                    visibility: hidden;
                                     pointer-events: none;
-                                    transition: opacity 0.15s, visibility 0.15s;
+                                    transition: opacity 0.15s;
                                     z-index: 9999;
                                     box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
                                     border: 1px solid #e5e7eb;
                                 }
-                                .dark .sidebar-tooltip {
+                                .dark #demo-sidebar.sidebar-collapsed .sidebar-tooltip {
                                     background: #374151;
                                     color: #e5e7eb;
                                     border-color: #4b5563;
                                 }
-                                
-                                /* Mostrar tooltip apenas no modo collapsed */
-                                #demo-sidebar:not(.sidebar-collapsed) .sidebar-tooltip {
-                                    display: none !important;
-                                }
-                                #demo-sidebar.sidebar-collapsed .sidebar-item:hover .sidebar-tooltip {
+                                #demo-sidebar.sidebar-collapsed li.group:hover .sidebar-tooltip {
                                     opacity: 1;
-                                    visibility: visible;
                                 }
                                 
                                 /* Navbar ajustes quando sidebar collapsed */
@@ -1227,19 +1225,19 @@
                                 </div>
 
                                 {{-- Navigation --}}
-                                <nav class="flex-1 overflow-y-auto overflow-x-hidden py-2 px-2">
+                                <nav class="flex-1 overflow-y-auto py-2 px-2">
                                     <ul class="space-y-1">
-                                        <li data-sidebar-item="dashboard" class="relative">
-                                            <a href="#" class="sidebar-item group flex items-center w-full px-2 py-1.5 rounded-lg bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 transition-all duration-200">
+                                        <li data-sidebar-item="dashboard" class="relative group">
+                                            <a href="#" class="sidebar-item flex items-center w-full px-2 py-1.5 rounded-lg bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 transition-all duration-200">
                                                 <span class="shrink-0 w-5 h-5">
                                                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                                                 </span>
                                                 <span class="sidebar-item-text ml-2 text-sm whitespace-nowrap transition-all duration-300">Dashboard</span>
-                                                <span class="sidebar-tooltip">Dashboard</span>
                                             </a>
+                                            <div class="sidebar-tooltip">Dashboard</div>
                                         </li>
-                                        <li data-sidebar-item="products" class="relative">
-                                            <button type="button" data-submenu-trigger class="sidebar-item group flex items-center w-full px-2 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200">
+                                        <li data-sidebar-item="products" class="relative group">
+                                            <button type="button" data-submenu-trigger class="sidebar-item flex items-center w-full px-2 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200">
                                                 <span class="shrink-0 w-5 h-5 text-gray-500">
                                                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
                                                 </span>
@@ -1247,21 +1245,21 @@
                                                 <svg data-arrow class="sidebar-item-arrow ml-auto w-3 h-3 text-gray-400 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                                                 </svg>
-                                                <span class="sidebar-tooltip">Produtos</span>
                                             </button>
+                                            <div class="sidebar-tooltip">Produtos</div>
                                             <ul data-submenu class="hidden mt-1 ml-4 pl-2 border-l-2 border-gray-200 dark:border-gray-600 space-y-0.5">
                                                 <li><a href="#" class="block px-2 py-1 text-xs text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 rounded hover:bg-gray-100 dark:hover:bg-gray-700">Todos</a></li>
                                                 <li><a href="#" class="block px-2 py-1 text-xs text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 rounded hover:bg-gray-100 dark:hover:bg-gray-700">Categorias</a></li>
                                             </ul>
                                         </li>
-                                        <li data-sidebar-item="users" class="relative">
-                                            <a href="#" class="sidebar-item group flex items-center w-full px-2 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200">
+                                        <li data-sidebar-item="users" class="relative group">
+                                            <a href="#" class="sidebar-item flex items-center w-full px-2 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200">
                                                 <span class="shrink-0 w-5 h-5 text-gray-500">
                                                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
                                                 </span>
                                                 <span class="sidebar-item-text ml-2 text-sm whitespace-nowrap transition-all duration-300">Usuários</span>
-                                                <span class="sidebar-tooltip">Usuários</span>
                                             </a>
+                                            <div class="sidebar-tooltip">Usuários</div>
                                         </li>
                                     </ul>
                                 </nav>
