@@ -1147,7 +1147,7 @@
                                 #demo-sidebar.sidebar-collapsed .sidebar-logo-full { display: none; }
                                 #demo-sidebar.sidebar-collapsed .sidebar-header { justify-content: center; }
                                 #demo-sidebar.sidebar-collapsed .sidebar-toggle-btn { margin: 0; }
-                                #demo-sidebar.sidebar-collapsed .sidebar-item { justify-content: center; position: relative; }
+                                #demo-sidebar.sidebar-collapsed .sidebar-item { justify-content: center; }
                                 
                                 /* Tooltips - escondidos por padrão */
                                 .sidebar-tooltip {
@@ -1156,12 +1156,14 @@
                                 
                                 /* Tooltips laterais no modo collapsed */
                                 #demo-sidebar.sidebar-collapsed .sidebar-tooltip {
+                                    position: absolute;
+                                    left: calc(100% + 0.5rem);
+                                    top: 50%;
+                                    transform: translateY(-50%);
                                     display: block;
-                                    position: fixed;
-                                    left: 5rem;
                                     padding: 0.375rem 0.75rem;
-                                    background: #1f2937;
-                                    color: white;
+                                    background: #f3f4f6;
+                                    color: #374151;
                                     font-size: 0.75rem;
                                     font-weight: 500;
                                     white-space: nowrap;
@@ -1170,7 +1172,13 @@
                                     pointer-events: none;
                                     transition: opacity 0.15s;
                                     z-index: 9999;
-                                    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+                                    box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
+                                    border: 1px solid #e5e7eb;
+                                }
+                                .dark #demo-sidebar.sidebar-collapsed .sidebar-tooltip {
+                                    background: #374151;
+                                    color: #e5e7eb;
+                                    border-color: #4b5563;
                                 }
                                 #demo-sidebar.sidebar-collapsed .sidebar-item:hover .sidebar-tooltip {
                                     opacity: 1;
