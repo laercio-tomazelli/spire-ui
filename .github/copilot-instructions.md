@@ -390,6 +390,105 @@ $v.toast.info('Hello!')
 
 5. **Add example** in `welcome.blade.php`
 
-6. **Update documentation** if needed
+6. **📝 Create documentation** (MANDATORY) in `docs/components/componentname.md`
+   - Follow the standard documentation template (see below)
+   - Include: description, usage examples, data attributes, API methods, events
+   - Add practical code examples
 
 7. **Run tests** and verify bundle size stays under 30KB gzip
+
+## 📝 Documentation Template
+
+> ⚠️ **MANDATORY**: Every new component MUST have documentation in `docs/components/`.
+
+Create a file `docs/components/componentname.md` with this structure:
+
+```markdown
+# ComponentName
+
+Brief description of what the component does.
+
+## Uso Básico
+
+\`\`\`html
+<div data-v="componentname">
+  <!-- Basic HTML structure -->
+</div>
+\`\`\`
+
+## Com Blade Component
+
+\`\`\`blade
+<x-ui.componentname prop="value" />
+\`\`\`
+
+## Data Attributes
+
+| Atributo | Tipo | Default | Descrição |
+|----------|------|---------|-----------|
+| `data-v="componentname"` | - | - | Identifica o componente |
+| `data-option` | string | - | Descrição da opção |
+
+## API JavaScript
+
+\`\`\`javascript
+const instance = SpireUI.get(document.querySelector('[data-v="componentname"]'));
+
+// Methods
+instance.methodName();
+instance.otherMethod();
+\`\`\`
+
+## Métodos
+
+| Método | Retorno | Descrição |
+|--------|---------|-----------|
+| `methodName()` | `this` | Descrição do método |
+| `destroy()` | `void` | Remove a instância |
+
+## Eventos
+
+| Evento | Detalhe | Descrição |
+|--------|---------|-----------|
+| `componentname:event` | `{ data }` | Quando algo acontece |
+
+\`\`\`javascript
+element.addEventListener('componentname:event', (e) => {
+  console.log(e.detail);
+});
+\`\`\`
+
+## Exemplos
+
+### Caso de Uso 1
+
+\`\`\`html
+<!-- Practical example -->
+\`\`\`
+
+### Caso de Uso 2
+
+\`\`\`html
+<!-- Another example -->
+\`\`\`
+
+## Acessibilidade
+
+- List accessibility features
+- Keyboard navigation
+- ARIA attributes used
+```
+
+### Documentation Checklist
+
+Before considering a component complete, ensure:
+
+- [ ] `docs/components/componentname.md` file exists
+- [ ] Description explains the component purpose
+- [ ] Basic HTML usage example included
+- [ ] Blade component example included (if applicable)
+- [ ] All data attributes documented in table
+- [ ] All public JavaScript methods documented
+- [ ] All custom events documented with detail structure
+- [ ] At least 2 practical usage examples
+- [ ] Accessibility features listed
