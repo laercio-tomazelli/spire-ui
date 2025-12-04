@@ -1123,16 +1123,20 @@
 
             {{-- Panel: Sidebar --}}
             <x-ui.tab-panel name="sidebar">
-                <div class="grid gap-8 lg:grid-cols-2">
-                    {{-- Sidebar + Navbar Demo Preview --}}
-                    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
-                        <h2 class="text-xl font-bold mb-6">📁 Sidebar + Navbar Integradas</h2>
-                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                            Navbar com 4 áreas e logo que aparece quando sidebar está recolhida.
-                        </p>
-                        
-                        {{-- Inline Demo --}}
-                        <div class="relative border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden h-[500px] bg-gray-50 dark:bg-gray-900">
+                {{-- Full Width Demo Container --}}
+                <div class="space-y-6">
+                    {{-- Header --}}
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="text-xl font-bold">📁 Sidebar + Navbar Integradas</h2>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                                Navbar com 4 áreas e logo que aparece quando sidebar está recolhida. Clique no botão ‹‹ para recolher.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    {{-- Full Width Demo --}}
+                    <div class="relative border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden h-[600px] bg-gray-50 dark:bg-gray-900">
                             {{-- Estilos para sidebar-collapsed --}}
                             <style>
                                 #demo-sidebar.sidebar-collapsed { width: 4rem !important; }
@@ -1295,78 +1299,66 @@
                         </div>
                     </div>
 
-                    {{-- Features & Code --}}
-                    <div class="space-y-6">
+                    {{-- Features, API & Events in horizontal layout --}}
+                    <div class="grid gap-6 lg:grid-cols-3">
                         {{-- Features --}}
-                        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
-                            <h2 class="text-xl font-bold mb-6">✨ Recursos</h2>
-                            <ul class="space-y-3">
-                                <li class="flex items-start gap-3">
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
+                            <h2 class="text-lg font-bold mb-4">✨ Recursos</h2>
+                            <ul class="space-y-2">
+                                <li class="flex items-start gap-2">
                                     <span class="text-green-500 mt-0.5">✓</span>
                                     <span class="text-gray-600 dark:text-gray-400 text-sm"><strong>Navbar Integrada:</strong> Logo aparece na navbar quando sidebar recolhe</span>
                                 </li>
-                                <li class="flex items-start gap-3">
+                                <li class="flex items-start gap-2">
                                     <span class="text-green-500 mt-0.5">✓</span>
-                                    <span class="text-gray-600 dark:text-gray-400 text-sm"><strong>4 Áreas Distintas:</strong> Logo, Centro, SAC, Ações (justify-between)</span>
+                                    <span class="text-gray-600 dark:text-gray-400 text-sm"><strong>4 Áreas Distintas:</strong> Logo, Centro, SAC, Ações</span>
                                 </li>
-                                <li class="flex items-start gap-3">
+                                <li class="flex items-start gap-2">
                                     <span class="text-green-500 mt-0.5">✓</span>
                                     <span class="text-gray-600 dark:text-gray-400 text-sm"><strong>Modo Recolhido:</strong> Toggle suave entre largura total e só ícones</span>
                                 </li>
-                                <li class="flex items-start gap-3">
+                                <li class="flex items-start gap-2">
                                     <span class="text-green-500 mt-0.5">✓</span>
-                                    <span class="text-gray-600 dark:text-gray-400 text-sm"><strong>Submenus Multinível:</strong> Animação deslizante ao expandir/recolher</span>
+                                    <span class="text-gray-600 dark:text-gray-400 text-sm"><strong>Submenus Multinível:</strong> Animação deslizante</span>
                                 </li>
-                                <li class="flex items-start gap-3">
+                                <li class="flex items-start gap-2">
                                     <span class="text-green-500 mt-0.5">✓</span>
                                     <span class="text-gray-600 dark:text-gray-400 text-sm"><strong>Persistência:</strong> Estado salvo no localStorage</span>
-                                </li>
-                                <li class="flex items-start gap-3">
-                                    <span class="text-green-500 mt-0.5">✓</span>
-                                    <span class="text-gray-600 dark:text-gray-400 text-sm"><strong>Acessível:</strong> ARIA labels e navegação por teclado</span>
-                                </li>
-                                <li class="flex items-start gap-3">
-                                    <span class="text-green-500 mt-0.5">✓</span>
-                                    <span class="text-gray-600 dark:text-gray-400 text-sm"><strong>Tooltips:</strong> Labels aparecem ao passar o mouse no modo recolhido</span>
                                 </li>
                             </ul>
                         </div>
 
                         {{-- API --}}
-                        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
-                            <h2 class="text-xl font-bold mb-6">🔧 API JavaScript</h2>
-                            <div class="bg-gray-900 rounded-xl p-4 text-sm font-mono overflow-x-auto">
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
+                            <h2 class="text-lg font-bold mb-4">🔧 API JavaScript</h2>
+                            <div class="bg-gray-900 rounded-xl p-4 text-xs font-mono overflow-x-auto">
                                 <pre class="text-gray-300"><code><span class="text-purple-400">const</span> <span class="text-blue-300">sidebar</span> = <span class="text-yellow-300">SpireUI</span>.<span class="text-green-300">get</span>(<span class="text-orange-300">el</span>);
 
-<span class="text-gray-500">// Toggle recolher/expandir</span>
+<span class="text-gray-500">// Toggle</span>
 <span class="text-blue-300">sidebar</span>.<span class="text-green-300">toggle</span>();
 <span class="text-blue-300">sidebar</span>.<span class="text-green-300">collapse</span>();
 <span class="text-blue-300">sidebar</span>.<span class="text-green-300">expand</span>();
 
-<span class="text-gray-500">// Mobile</span>
-<span class="text-blue-300">sidebar</span>.<span class="text-green-300">openMobile</span>();
-<span class="text-blue-300">sidebar</span>.<span class="text-green-300">closeMobile</span>();
-
 <span class="text-gray-500">// Submenus</span>
-<span class="text-blue-300">sidebar</span>.<span class="text-green-300">openSubmenu</span>(<span class="text-orange-300">'products'</span>);
+<span class="text-blue-300">sidebar</span>.<span class="text-green-300">openSubmenu</span>(<span class="text-orange-300">'id'</span>);
 <span class="text-blue-300">sidebar</span>.<span class="text-green-300">closeAllSubmenus</span>();
 
-<span class="text-gray-500">// Verificar estado</span>
-<span class="text-blue-300">sidebar</span>.<span class="text-green-300">isCollapsed</span>(); <span class="text-gray-500">// true/false</span></code></pre>
+<span class="text-gray-500">// Estado</span>
+<span class="text-blue-300">sidebar</span>.<span class="text-green-300">isCollapsed</span>();</code></pre>
                             </div>
                         </div>
 
                         {{-- Events --}}
-                        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
-                            <h2 class="text-xl font-bold mb-6">📡 Eventos</h2>
-                            <ul class="space-y-2 text-sm font-mono">
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
+                            <h2 class="text-lg font-bold mb-4">📡 Eventos</h2>
+                            <ul class="space-y-2 text-xs font-mono">
                                 <li class="flex items-center gap-2">
                                     <span class="px-2 py-0.5 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded">sidebar:collapse</span>
-                                    <span class="text-gray-500">→ Sidebar recolhida</span>
+                                    <span class="text-gray-500">→ Recolhida</span>
                                 </li>
                                 <li class="flex items-center gap-2">
                                     <span class="px-2 py-0.5 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded">sidebar:expand</span>
-                                    <span class="text-gray-500">→ Sidebar expandida</span>
+                                    <span class="text-gray-500">→ Expandida</span>
                                 </li>
                                 <li class="flex items-center gap-2">
                                     <span class="px-2 py-0.5 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded">sidebar:submenu-open</span>
