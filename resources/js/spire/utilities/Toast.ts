@@ -10,7 +10,7 @@ export class ToastManagerClass implements ToastManager {
   #getContainer(): HTMLElement {
     if (!this.#config.container) {
       this.#config.container = document.createElement('div');
-      this.#config.container.className = 'fixed top-5 right-5 z-50 flex flex-col gap-3 max-w-sm';
+      this.#config.container.className = 'fixed top-5 right-5 z-[9999] flex flex-col gap-3 max-w-sm';
       this.#config.container.setAttribute('role', 'region');
       this.#config.container.setAttribute('aria-label', 'Notificações');
       document.body.appendChild(this.#config.container);
