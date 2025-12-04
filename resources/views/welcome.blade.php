@@ -1252,7 +1252,7 @@
                                             const rect = item.getBoundingClientRect();
                                             tooltip.textContent = text;
                                             tooltip.classList.remove('hidden');
-                                            tooltip.style.left = (rect.right + 8) + 'px';
+                                            tooltip.style.left = (rect.right + 12) + 'px';
                                             tooltip.style.top = (rect.top + rect.height / 2) + 'px';
                                             tooltip.style.transform = 'translateY(-50%)';
                                         });
