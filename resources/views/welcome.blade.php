@@ -27,6 +27,7 @@
                 <x-ui.tab name="utilities">Utilities</x-ui.tab>
                 <x-ui.tab name="sidebar">Sidebar</x-ui.tab>
                 <x-ui.tab name="extras">Extras</x-ui.tab>
+                <x-ui.tab name="windows">Window Manager</x-ui.tab>
             </x-slot:tabs>
 
             {{-- Panel: Buttons --}}
@@ -3023,6 +3024,147 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </x-ui.tab-panel>
+
+            {{-- Panel: Window Manager --}}
+            <x-ui.tab-panel name="windows">
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 mb-8">
+                    <h2 class="text-xl font-bold mb-4">🪟 Window Manager</h2>
+                    <p class="text-gray-600 dark:text-gray-400 mb-6">
+                        Sistema de janelas arrastáveis e redimensionáveis estilo desktop. 
+                        Arraste pela barra de título, redimensione pelas bordas, minimize para a taskbar.
+                    </p>
+                    <div class="flex gap-2 mb-6">
+                        <x-ui.button 
+                            id="btn-open-editor"
+                            onclick="document.getElementById('win-editor').style.display = 'block'; SpireUI.init();"
+                        >
+                            📝 Abrir Editor
+                        </x-ui.button>
+                        <x-ui.button 
+                            id="btn-open-calc"
+                            class="from-green-500 to-teal-500"
+                            onclick="document.getElementById('win-calc').style.display = 'block'; SpireUI.init();"
+                        >
+                            🔢 Abrir Calculadora
+                        </x-ui.button>
+                        <x-ui.button 
+                            id="btn-open-files"
+                            class="from-purple-500 to-pink-500"
+                            onclick="document.getElementById('win-files').style.display = 'block'; SpireUI.init();"
+                        >
+                            📁 Abrir Arquivos
+                        </x-ui.button>
+                    </div>
+                    <div class="p-4 bg-gray-100 dark:bg-gray-900 rounded-lg text-sm font-mono">
+                        <p class="text-gray-500 dark:text-gray-400">// Controle via JavaScript</p>
+                        <p>const win = SpireUI.get(element);</p>
+                        <p>win.minimize(); // Minimiza para taskbar</p>
+                        <p>win.maximize(); // Tela cheia</p>
+                        <p>win.restore();  // Restaura tamanho</p>
+                        <p>win.close();    // Fecha a janela</p>
+                    </div>
+                </div>
+
+                {{-- Desktop Area with Windows --}}
+                <div class="relative bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl min-h-[600px] p-4 overflow-hidden">
+                    {{-- Janela Editor --}}
+                    <x-ui.window 
+                        id="win-editor" 
+                        title="Editor de Texto" 
+                        icon="📝" 
+                        width="500px" 
+                        height="350px"
+                        :x="30" 
+                        :y="30"
+                    >
+                        <div class="flex flex-col h-full -m-4">
+                            <div class="flex gap-2 p-2 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
+                                <button class="px-2 py-1 text-xs bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-100 dark:hover:bg-gray-600">Novo</button>
+                                <button class="px-2 py-1 text-xs bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-100 dark:hover:bg-gray-600">Abrir</button>
+                                <button class="px-2 py-1 text-xs bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-100 dark:hover:bg-gray-600">Salvar</button>
+                            </div>
+                            <textarea 
+                                class="flex-1 w-full p-4 font-mono text-sm resize-none focus:outline-none bg-white dark:bg-gray-900 border-0"
+                                placeholder="Digite seu texto aqui..."
+                            >// Bem-vindo ao Editor!
+function hello() {
+    console.log("Hello, Spire UI!");
+}
+
+hello();</textarea>
+                        </div>
+                    </x-ui.window>
+
+                    {{-- Janela Calculadora --}}
+                    <x-ui.window 
+                        id="win-calc" 
+                        title="Calculadora" 
+                        icon="🔢" 
+                        width="280px" 
+                        height="370px"
+                        :x="350" 
+                        :y="80"
+                    >
+                        <div class="-m-4 p-3 bg-gray-100 dark:bg-gray-800 h-full">
+                            <input 
+                                type="text" 
+                                class="w-full text-right text-2xl p-3 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg mb-3 font-mono" 
+                                value="0" 
+                                readonly
+                            >
+                            <div class="grid grid-cols-4 gap-1.5">
+                                @foreach(['C', '±', '%', '÷', '7', '8', '9', '×', '4', '5', '6', '-', '1', '2', '3', '+', '0', '.', '⌫', '='] as $btn)
+                                    <button class="p-3 rounded-lg font-medium transition-colors
+                                        {{ in_array($btn, ['÷', '×', '-', '+', '=']) ? 'bg-blue-500 text-white hover:bg-blue-600' : 'bg-white dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600' }}
+                                        {{ in_array($btn, ['C', '±', '%']) ? 'bg-gray-300 dark:bg-gray-600' : '' }}
+                                    ">
+                                        {{ $btn }}
+                                    </button>
+                                @endforeach
+                            </div>
+                        </div>
+                    </x-ui.window>
+
+                    {{-- Janela Arquivos --}}
+                    <x-ui.window 
+                        id="win-files" 
+                        title="Gerenciador de Arquivos" 
+                        icon="📁" 
+                        width="400px" 
+                        height="320px"
+                        :x="180" 
+                        :y="200"
+                    >
+                        <div class="-m-4">
+                            <div class="flex items-center gap-2 p-2 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
+                                <button class="p-1.5 hover:bg-gray-200 dark:hover:bg-gray-700 rounded">⬅️</button>
+                                <button class="p-1.5 hover:bg-gray-200 dark:hover:bg-gray-700 rounded">➡️</button>
+                                <span class="flex-1 px-2 py-1 text-sm bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded">/home/usuario/documentos</span>
+                            </div>
+                            <div class="divide-y divide-gray-100 dark:divide-gray-700">
+                                @foreach([
+                                    ['📁', 'Projetos', 'Pasta', '--'],
+                                    ['📁', 'Downloads', 'Pasta', '--'],
+                                    ['📄', 'documento.pdf', 'PDF', '2.3 MB'],
+                                    ['🖼️', 'foto.jpg', 'Imagem', '1.2 MB'],
+                                    ['📊', 'planilha.xlsx', 'Excel', '450 KB'],
+                                    ['📝', 'notas.txt', 'Texto', '12 KB'],
+                                ] as $file)
+                                    <div class="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer">
+                                        <span class="text-lg">{{ $file[0] }}</span>
+                                        <span class="flex-1 text-sm truncate">{{ $file[1] }}</span>
+                                        <span class="text-xs text-gray-400">{{ $file[2] }}</span>
+                                        <span class="text-xs text-gray-400 w-16 text-right">{{ $file[3] }}</span>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </x-ui.window>
+
+                    {{-- Taskbar --}}
+                    <x-ui.window-taskbar />
                 </div>
             </x-ui.tab-panel>
         </x-ui.tabs>

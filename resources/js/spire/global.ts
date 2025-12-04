@@ -42,6 +42,8 @@ import { Navbar } from './components/Navbar';
 import { Tabs } from './components/Tabs';
 import { Tooltip } from './components/Tooltip';
 import { VirtualScroll } from './components/VirtualScroll';
+import { Window } from './components/Window';
+import { WindowTaskbar } from './components/WindowTaskbar';
 
 // Utilities
 import { toast } from './utilities/Toast';
@@ -88,7 +90,9 @@ const Components: Record<string, new (el: HTMLElement) => SpireUIInstance> = {
   contextmenu: ContextMenu,
   carousel: Carousel,
   sidebar: Sidebar,
-  navbar: Navbar
+  navbar: Navbar,
+  window: Window,
+  'window-taskbar': WindowTaskbar
 };
 
 // Command palette singleton

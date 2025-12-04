@@ -49,6 +49,8 @@ export { Table } from './components/Table';
 export { Tabs } from './components/Tabs';
 export { Tooltip } from './components/Tooltip';
 export { VirtualScroll } from './components/VirtualScroll';
+export { Window, getAllWindows } from './components/Window';
+export { WindowTaskbar } from './components/WindowTaskbar';
 
 // Re-export utilities for direct imports
 export { toast } from './utilities/Toast';

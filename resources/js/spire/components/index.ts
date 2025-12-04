@@ -42,3 +42,7 @@ export { LazyLoad } from './LazyLoad';
 export { InfiniteScroll } from './InfiniteScroll';
 export { VirtualScroll } from './VirtualScroll';
 export { Persist } from './Persist';
+
+// Window Manager
+export { Window, getAllWindows } from './Window';
+export { WindowTaskbar } from './WindowTaskbar';

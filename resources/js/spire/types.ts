@@ -457,5 +457,27 @@ declare global {
     $carousel?: CarouselInstance;
     $rating?: RatingInstance;
     $collapse?: CollapseInstance;
+    $window?: WindowInstance;
+    $windowtaskbar?: WindowTaskbarInstance;
   }
+}
+
+// =====================
+// WINDOW MANAGER
+// =====================
+
+export interface WindowInstance extends SpireUIInstance {
+  minimize(): this;
+  maximize(): this;
+  restore(): this;
+  close(): this;
+  focus(): this;
+  setTitle(title: string): this;
+  getTitle(): string;
+  isMinimized(): boolean;
+  isMaximized(): boolean;
+}
+
+export interface WindowTaskbarInstance extends SpireUIInstance {
+  // Taskbar manages itself via events
 }

@@ -76,6 +76,9 @@ modal.open();
 - [Persist](components/persist.md) - Persistência de estado
 - [FormValidator](components/formvalidator.md) - Validação de formulários
 
+### Window Manager
+- [Window](components/window.md) - Janelas arrastáveis estilo desktop
+
 ## 🎨 Temas
 
 Spire UI suporta modo claro e escuro automaticamente via Tailwind CSS.
