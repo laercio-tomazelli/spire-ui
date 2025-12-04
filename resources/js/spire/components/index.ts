@@ -15,10 +15,17 @@ export { Tooltip } from './Tooltip';
 export { Select } from './Select';
 export { MultiSelect } from './MultiSelect';
 export { FormValidator } from './FormValidator';
+export { DatePicker } from './DatePicker';
+export { DateRangePicker } from './DateRangePicker';
+export { ColorPicker } from './ColorPicker';
+export { RangeSlider } from './RangeSlider';
+export { FileUpload } from './FileUpload';
 
 // Overlay Components  
 export { Drawer } from './Drawer';
 export { Popover } from './Popover';
+export { ContextMenu } from './ContextMenu';
+export { CommandPalette } from './CommandPalette';
 
 // Feedback Components
 export { Progress } from './Progress';
@@ -29,3 +36,5 @@ export { Stepper } from './Stepper';
 export { Clipboard, setToast as setClipboardToast } from './Clipboard';
 export { LazyLoad } from './LazyLoad';
 export { InfiniteScroll } from './InfiniteScroll';
+export { VirtualScroll } from './VirtualScroll';
+export { Persist } from './Persist';
