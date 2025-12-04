@@ -3,7 +3,7 @@ import { instances, emit } from '../core/registry';
 
 export class Sidebar implements SidebarInstance {
   #el: HTMLElement;
-  #toggleBtn: HTMLElement | null;
+  #toggleBtns: NodeListOf<HTMLElement>;
   #overlay: HTMLElement | null;
   #menuItems: NodeListOf<HTMLElement>;
   #isCollapsed: boolean;
@@ -14,7 +14,7 @@ export class Sidebar implements SidebarInstance {
 
   constructor(el: HTMLElement) {
     this.#el = el;
-    this.#toggleBtn = el.querySelector('[data-sidebar-toggle]');
+    this.#toggleBtns = el.querySelectorAll('[data-sidebar-toggle]');
     this.#overlay = el.querySelector('[data-sidebar-overlay]');
     this.#menuItems = el.querySelectorAll('[data-sidebar-item]');
     this.#persistKey = el.dataset.persist || null;
@@ -34,8 +34,10 @@ export class Sidebar implements SidebarInstance {
       this.#el.classList.add('sidebar-collapsed');
     }
 
-    // Setup toggle button
-    this.#toggleBtn?.addEventListener('click', () => this.toggle());
+    // Setup toggle buttons (can be multiple)
+    this.#toggleBtns.forEach(btn => {
+      btn.addEventListener('click', () => this.toggle());
+    });
 
     // Setup overlay click to close on mobile
     this.#overlay?.addEventListener('click', () => this.closeMobile());

@@ -23,6 +23,7 @@ export { FileUpload } from './FileUpload';
 
 // Layout Components
 export { Sidebar } from './Sidebar';
+export { Navbar } from './Navbar';
 
 // Overlay Components  
 export { Drawer } from './Drawer';

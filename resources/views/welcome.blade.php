@@ -1124,128 +1124,172 @@
             {{-- Panel: Sidebar --}}
             <x-ui.tab-panel name="sidebar">
                 <div class="grid gap-8 lg:grid-cols-2">
-                    {{-- Sidebar Demo Preview --}}
+                    {{-- Sidebar + Navbar Demo Preview --}}
                     <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
-                        <h2 class="text-xl font-bold mb-6">📁 Sidebar Interativa</h2>
+                        <h2 class="text-xl font-bold mb-6">📁 Sidebar + Navbar Integradas</h2>
                         <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                            Menu lateral com múltiplos níveis, modo recolhido e animações suaves.
+                            Navbar com 4 áreas e logo que aparece quando sidebar está recolhida.
                         </p>
                         
-                        {{-- Inline Sidebar Demo --}}
+                        {{-- Inline Demo --}}
                         <div class="relative border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden h-[500px] bg-gray-50 dark:bg-gray-900">
-                            {{-- Mini sidebar inside the demo box --}}
+                            {{-- Estilos para sidebar-collapsed --}}
+                            <style>
+                                #demo-sidebar.sidebar-collapsed { width: 4rem !important; }
+                                #demo-sidebar.sidebar-collapsed .sidebar-item-text { opacity: 0; width: 0; overflow: hidden; }
+                                #demo-sidebar.sidebar-collapsed .sidebar-item-arrow { opacity: 0; }
+                                #demo-sidebar.sidebar-collapsed [data-submenu] { display: none !important; }
+                                #demo-sidebar.sidebar-collapsed .toggle-icon { transform: rotate(180deg); }
+                                #demo-sidebar.sidebar-collapsed .sidebar-logo-full { opacity: 0; width: 0; overflow: hidden; }
+                                
+                                /* Navbar ajustes quando sidebar collapsed */
+                                #demo-sidebar.sidebar-collapsed ~ #demo-navbar { left: 4rem !important; }
+                                #demo-sidebar.sidebar-collapsed ~ #demo-navbar [data-navbar-logo] { 
+                                    opacity: 1 !important; 
+                                    width: auto !important; 
+                                    overflow: visible !important; 
+                                }
+                                #demo-sidebar.sidebar-collapsed ~ #demo-content { left: 4rem !important; }
+                            </style>
+                            
+                            {{-- Sidebar --}}
                             <aside 
                                 id="demo-sidebar"
                                 data-v="sidebar"
                                 data-persist="demo"
-                                class="sidebar absolute inset-y-0 left-0 flex flex-col
+                                class="sidebar absolute inset-y-0 left-0 flex flex-col z-20
                                        bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700
-                                       transition-all duration-300 ease-in-out
-                                       w-56 sidebar-collapsed:w-16"
+                                       transition-all duration-300 ease-in-out w-56"
                             >
-                                {{-- Header --}}
-                                <div class="flex items-center justify-between h-14 px-3 border-b border-gray-200 dark:border-gray-700 shrink-0">
-                                    <div class="flex items-center gap-2 overflow-hidden">
-                                        <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold text-sm shrink-0">
+                                {{-- Sidebar Header with Logo --}}
+                                <div class="flex items-center justify-between h-12 px-3 border-b border-gray-200 dark:border-gray-700 shrink-0">
+                                    <div class="flex items-center gap-2 overflow-hidden sidebar-logo-full transition-all duration-300">
+                                        <div class="w-7 h-7 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold text-xs shrink-0">
                                             S
                                         </div>
-                                        <span class="sidebar-item-text font-semibold text-gray-800 dark:text-gray-200 whitespace-nowrap transition-all duration-300">
-                                            SpireUI
+                                        <span class="sidebar-item-text font-semibold text-gray-800 dark:text-gray-200 whitespace-nowrap text-sm">
+                                            SPIRE
                                         </span>
                                     </div>
                                     <button 
                                         type="button"
                                         data-sidebar-toggle
-                                        class="p-1.5 rounded-lg text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                                        class="p-1 rounded-lg text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                                     >
-                                        <svg class="w-4 h-4 transition-transform duration-300 sidebar-collapsed:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg class="toggle-icon w-4 h-4 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/>
                                         </svg>
                                     </button>
                                 </div>
 
                                 {{-- Navigation --}}
-                                <nav class="flex-1 overflow-y-auto overflow-x-hidden py-3 px-2">
+                                <nav class="flex-1 overflow-y-auto overflow-x-hidden py-2 px-2">
                                     <ul class="space-y-1">
-                                        {{-- Dashboard --}}
                                         <li data-sidebar-item="dashboard">
-                                            <a href="#" class="sidebar-item group flex items-center w-full px-2.5 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200">
-                                                <span class="shrink-0 w-5 h-5 text-gray-500">
+                                            <a href="#" class="sidebar-item group flex items-center w-full px-2 py-1.5 rounded-lg bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 transition-all duration-200">
+                                                <span class="shrink-0 w-5 h-5">
                                                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                                                 </span>
-                                                <span class="sidebar-item-text ml-2.5 text-sm whitespace-nowrap transition-all duration-300">Dashboard</span>
+                                                <span class="sidebar-item-text ml-2 text-sm whitespace-nowrap transition-all duration-300">Dashboard</span>
                                             </a>
                                         </li>
-
-                                        {{-- Products with submenu --}}
                                         <li data-sidebar-item="products" class="relative">
-                                            <button type="button" data-submenu-trigger class="sidebar-item group flex items-center w-full px-2.5 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200">
+                                            <button type="button" data-submenu-trigger class="sidebar-item group flex items-center w-full px-2 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200">
                                                 <span class="shrink-0 w-5 h-5 text-gray-500">
                                                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
                                                 </span>
-                                                <span class="sidebar-item-text ml-2.5 text-sm whitespace-nowrap transition-all duration-300">Produtos</span>
-                                                <svg data-arrow class="sidebar-item-arrow ml-auto w-4 h-4 text-gray-400 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <span class="sidebar-item-text ml-2 text-sm whitespace-nowrap transition-all duration-300">Produtos</span>
+                                                <svg data-arrow class="sidebar-item-arrow ml-auto w-3 h-3 text-gray-400 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                                                 </svg>
                                             </button>
-                                            <ul data-submenu class="hidden mt-1 ml-4 pl-3 border-l-2 border-gray-200 dark:border-gray-600 space-y-1">
-                                                <li><a href="#" class="block px-2.5 py-1.5 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">Todos</a></li>
-                                                <li><a href="#" class="block px-2.5 py-1.5 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">Categorias</a></li>
-                                                <li><a href="#" class="block px-2.5 py-1.5 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">Estoque</a></li>
+                                            <ul data-submenu class="hidden mt-1 ml-4 pl-2 border-l-2 border-gray-200 dark:border-gray-600 space-y-0.5">
+                                                <li><a href="#" class="block px-2 py-1 text-xs text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 rounded hover:bg-gray-100 dark:hover:bg-gray-700">Todos</a></li>
+                                                <li><a href="#" class="block px-2 py-1 text-xs text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 rounded hover:bg-gray-100 dark:hover:bg-gray-700">Categorias</a></li>
                                             </ul>
                                         </li>
-
-                                        {{-- Users with submenu --}}
-                                        <li data-sidebar-item="users" class="relative">
-                                            <button type="button" data-submenu-trigger class="sidebar-item group flex items-center w-full px-2.5 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200">
+                                        <li data-sidebar-item="users">
+                                            <a href="#" class="sidebar-item group flex items-center w-full px-2 py-1.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200">
                                                 <span class="shrink-0 w-5 h-5 text-gray-500">
                                                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
                                                 </span>
-                                                <span class="sidebar-item-text ml-2.5 text-sm whitespace-nowrap transition-all duration-300">Usuários</span>
-                                                <svg data-arrow class="sidebar-item-arrow ml-auto w-4 h-4 text-gray-400 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                                                </svg>
-                                            </button>
-                                            <ul data-submenu class="hidden mt-1 ml-4 pl-3 border-l-2 border-gray-200 dark:border-gray-600 space-y-1">
-                                                <li><a href="#" class="block px-2.5 py-1.5 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">Lista</a></li>
-                                                <li><a href="#" class="block px-2.5 py-1.5 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">Roles</a></li>
-                                                <li><a href="#" class="block px-2.5 py-1.5 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">Permissões</a></li>
-                                            </ul>
-                                        </li>
-
-                                        {{-- Settings --}}
-                                        <li data-sidebar-item="settings">
-                                            <a href="#" class="sidebar-item group flex items-center w-full px-2.5 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200">
-                                                <span class="shrink-0 w-5 h-5 text-gray-500">
-                                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                                                </span>
-                                                <span class="sidebar-item-text ml-2.5 text-sm whitespace-nowrap transition-all duration-300">Configurações</span>
+                                                <span class="sidebar-item-text ml-2 text-sm whitespace-nowrap transition-all duration-300">Usuários</span>
                                             </a>
                                         </li>
                                     </ul>
                                 </nav>
-
-                                {{-- Footer --}}
-                                <div class="shrink-0 border-t border-gray-200 dark:border-gray-700 p-2">
-                                    <a href="#" class="sidebar-item group flex items-center px-2.5 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200">
-                                        <span class="shrink-0 w-5 h-5 text-gray-500">
-                                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
-                                        </span>
-                                        <span class="sidebar-item-text ml-2.5 text-sm whitespace-nowrap transition-all duration-300">Sair</span>
-                                    </a>
-                                </div>
                             </aside>
 
+                            {{-- Navbar --}}
+                            <header 
+                                id="demo-navbar"
+                                data-v="navbar"
+                                data-sidebar="demo-sidebar"
+                                class="absolute top-0 right-0 left-56 h-12 z-10
+                                       bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700
+                                       transition-all duration-300 ease-in-out"
+                            >
+                                <div class="h-full flex items-center justify-between px-3">
+                                    {{-- Área 1: Logo (aparece quando sidebar collapsed) --}}
+                                    <div class="flex items-center">
+                                        <div data-navbar-logo class="flex items-center gap-2 transition-all duration-300 opacity-0 w-0 overflow-hidden">
+                                            <div class="w-7 h-7 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold text-xs shrink-0">
+                                                S
+                                            </div>
+                                            <span class="font-semibold text-gray-800 dark:text-gray-200 whitespace-nowrap text-sm">
+                                                SPIRE
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    {{-- Área 2: Centro (Logo do parceiro) --}}
+                                    <div class="flex items-center justify-center">
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-lg font-bold text-gray-700 dark:text-gray-300">G<span class="text-blue-600">i</span>BR</span>
+                                            <span class="text-[10px] text-gray-500 leading-tight">COMPONENTES<br>DA AMAZÔNIA</span>
+                                        </div>
+                                    </div>
+
+                                    {{-- Área 3: SAC --}}
+                                    <div class="hidden sm:flex items-center gap-1.5 text-gray-600 dark:text-gray-400 text-xs">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                                        </svg>
+                                        <span class="font-medium">SAC 0800 387 8220</span>
+                                    </div>
+
+                                    {{-- Área 4: Ações --}}
+                                    <div class="flex items-center gap-2">
+                                        <button class="p-1.5 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                            </svg>
+                                        </button>
+                                        <button class="relative p-1.5 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                                            </svg>
+                                            <span class="absolute -top-0.5 -right-0.5 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">6</span>
+                                        </button>
+                                        <div class="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
+                                            <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                            </header>
+
                             {{-- Content area --}}
-                            <div class="absolute inset-0 left-56 sidebar-collapsed:left-16 transition-all duration-300 p-6 flex items-center justify-center" id="demo-content">
+                            <div class="absolute inset-0 top-12 left-56 transition-all duration-300 p-4 flex items-center justify-center" id="demo-content">
                                 <div class="text-center">
-                                    <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                                        <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <div class="w-12 h-12 mx-auto mb-3 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                                        <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"/>
                                         </svg>
                                     </div>
-                                    <p class="text-gray-500 dark:text-gray-400 text-sm">Área de conteúdo</p>
-                                    <p class="text-gray-400 dark:text-gray-500 text-xs mt-1">Clique no botão de toggle para recolher</p>
+                                    <p class="text-gray-500 dark:text-gray-400 text-xs">Área de conteúdo</p>
+                                    <p class="text-gray-400 dark:text-gray-500 text-[10px] mt-1">Toggle para recolher sidebar</p>
                                 </div>
                             </div>
                         </div>
@@ -1259,6 +1303,14 @@
                             <ul class="space-y-3">
                                 <li class="flex items-start gap-3">
                                     <span class="text-green-500 mt-0.5">✓</span>
+                                    <span class="text-gray-600 dark:text-gray-400 text-sm"><strong>Navbar Integrada:</strong> Logo aparece na navbar quando sidebar recolhe</span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="text-green-500 mt-0.5">✓</span>
+                                    <span class="text-gray-600 dark:text-gray-400 text-sm"><strong>4 Áreas Distintas:</strong> Logo, Centro, SAC, Ações (justify-between)</span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="text-green-500 mt-0.5">✓</span>
                                     <span class="text-gray-600 dark:text-gray-400 text-sm"><strong>Modo Recolhido:</strong> Toggle suave entre largura total e só ícones</span>
                                 </li>
                                 <li class="flex items-start gap-3">
@@ -1268,10 +1320,6 @@
                                 <li class="flex items-start gap-3">
                                     <span class="text-green-500 mt-0.5">✓</span>
                                     <span class="text-gray-600 dark:text-gray-400 text-sm"><strong>Persistência:</strong> Estado salvo no localStorage</span>
-                                </li>
-                                <li class="flex items-start gap-3">
-                                    <span class="text-green-500 mt-0.5">✓</span>
-                                    <span class="text-gray-600 dark:text-gray-400 text-sm"><strong>Responsivo:</strong> Drawer em mobile com overlay</span>
                                 </li>
                                 <li class="flex items-start gap-3">
                                     <span class="text-green-500 mt-0.5">✓</span>

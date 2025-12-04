@@ -396,6 +396,11 @@ export interface SidebarInstance extends SpireUIInstance {
   closeAllSubmenus(): this;
 }
 
+export interface NavbarInstance extends SpireUIInstance {
+  showLogo(): this;
+  hideLogo(): this;
+}
+
 export interface SpireUIAPI {
   init(): void;
   get<T extends SpireUIInstance>(el: HTMLElement): T | undefined;

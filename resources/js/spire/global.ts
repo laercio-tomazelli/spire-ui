@@ -38,6 +38,7 @@ import { Skeleton } from './components/Skeleton';
 import { Stepper } from './components/Stepper';
 import { Table } from './components/Table';
 import { Sidebar } from './components/Sidebar';
+import { Navbar } from './components/Navbar';
 import { Tabs } from './components/Tabs';
 import { Tooltip } from './components/Tooltip';
 import { VirtualScroll } from './components/VirtualScroll';
@@ -86,7 +87,8 @@ const Components: Record<string, new (el: HTMLElement) => SpireUIInstance> = {
   persist: Persist,
   contextmenu: ContextMenu,
   carousel: Carousel,
-  sidebar: Sidebar
+  sidebar: Sidebar,
+  navbar: Navbar
 };
 
 // Command palette singleton
