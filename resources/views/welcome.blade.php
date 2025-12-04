@@ -3164,7 +3164,53 @@ hello();</textarea>
                     </x-ui.window>
 
                     {{-- Taskbar --}}
-                    <x-ui.window-taskbar />
+                    <x-ui.window-taskbar id="demo-taskbar" />
+                </div>
+
+                {{-- API Example --}}
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 mt-8">
+                    <h3 class="text-lg font-bold mb-4">📦 Registrar Módulos (API)</h3>
+                    <p class="text-gray-600 dark:text-gray-400 mb-4">
+                        Use a API para registrar módulos da aplicação que podem abrir múltiplas instâncias.
+                    </p>
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        <x-ui.button id="btn-register-users" class="from-indigo-500 to-blue-500">
+                            👥 Cadastro Usuários
+                        </x-ui.button>
+                        <x-ui.button id="btn-register-products" class="from-green-500 to-teal-500">
+                            📦 Cadastro Produtos
+                        </x-ui.button>
+                        <x-ui.button id="btn-register-orders" class="from-orange-500 to-red-500">
+                            🛒 Pedidos
+                        </x-ui.button>
+                    </div>
+                    <div class="p-4 bg-gray-100 dark:bg-gray-900 rounded-lg text-sm font-mono overflow-x-auto">
+<pre class="text-gray-700 dark:text-gray-300">// Obter instância do taskbar
+const taskbar = SpireUI.get(document.getElementById('demo-taskbar'));
+
+// Registrar módulo (aparece no menu de apps)
+taskbar.registerApp({
+  id: 'usuarios',
+  title: 'Cadastro de Usuários',
+  icon: '👥',
+  url: '/admin/usuarios',        // Carrega via iframe
+  // ou: content: '&lt;div&gt;...&lt;/div&gt;',  // HTML direto
+  width: '800px',
+  height: '600px',
+  singleton: false  // Permite múltiplas instâncias
+});
+
+// Abrir o módulo programaticamente
+taskbar.openApp('usuarios');
+
+// Abrir janela avulsa
+taskbar.openWindow({
+  title: 'Nova Janela',
+  content: '&lt;p&gt;Conteúdo personalizado&lt;/p&gt;',
+  width: '500px',
+  height: '400px'
+});</pre>
+                    </div>
                 </div>
             </x-ui.tab-panel>
         </x-ui.tabs>
@@ -3812,6 +3858,199 @@ hello();</textarea>
             document.getElementById('tabs-clear')?.addEventListener('click', () => {
                 dynamicTabs?.$tabs?.clearAllHighlights();
                 SpireUI.toast.success('Todos os destaques removidos');
+            });
+
+            // ========== WINDOW MANAGER API ==========
+            const getTaskbar = () => SpireUI.get(document.querySelector('[data-v="window-taskbar"]'));
+            
+            // Botão: Cadastro de Usuários
+            document.getElementById('btn-register-users')?.addEventListener('click', () => {
+                const taskbar = getTaskbar();
+                console.log('Taskbar:', taskbar);
+                if (taskbar && taskbar.openWindow) {
+                    taskbar.openWindow({
+                        title: 'Cadastro de Usuários',
+                        icon: '👥',
+                        width: '700px',
+                        height: '500px',
+                        content: `
+                            <div class="p-4 h-full flex flex-col">
+                                <div class="flex gap-2 mb-4">
+                                    <input type="text" placeholder="Buscar usuário..." class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800">
+                                    <button class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">+ Novo</button>
+                                </div>
+                                <div class="flex-1 overflow-auto border border-gray-200 dark:border-gray-700 rounded-lg">
+                                    <table class="w-full text-sm">
+                                        <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0">
+                                            <tr>
+                                                <th class="px-4 py-2 text-left">ID</th>
+                                                <th class="px-4 py-2 text-left">Nome</th>
+                                                <th class="px-4 py-2 text-left">Email</th>
+                                                <th class="px-4 py-2 text-left">Status</th>
+                                                <th class="px-4 py-2 text-center">Ações</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+                                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-800">
+                                                <td class="px-4 py-2">1</td>
+                                                <td class="px-4 py-2">João Silva</td>
+                                                <td class="px-4 py-2">joao@email.com</td>
+                                                <td class="px-4 py-2"><span class="px-2 py-1 text-xs bg-green-100 text-green-700 rounded">Ativo</span></td>
+                                                <td class="px-4 py-2 text-center">
+                                                    <button class="text-blue-500 hover:underline">Editar</button>
+                                                </td>
+                                            </tr>
+                                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-800">
+                                                <td class="px-4 py-2">2</td>
+                                                <td class="px-4 py-2">Maria Santos</td>
+                                                <td class="px-4 py-2">maria@email.com</td>
+                                                <td class="px-4 py-2"><span class="px-2 py-1 text-xs bg-green-100 text-green-700 rounded">Ativo</span></td>
+                                                <td class="px-4 py-2 text-center">
+                                                    <button class="text-blue-500 hover:underline">Editar</button>
+                                                </td>
+                                            </tr>
+                                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-800">
+                                                <td class="px-4 py-2">3</td>
+                                                <td class="px-4 py-2">Pedro Costa</td>
+                                                <td class="px-4 py-2">pedro@email.com</td>
+                                                <td class="px-4 py-2"><span class="px-2 py-1 text-xs bg-yellow-100 text-yellow-700 rounded">Pendente</span></td>
+                                                <td class="px-4 py-2 text-center">
+                                                    <button class="text-blue-500 hover:underline">Editar</button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        `
+                    });
+                    SpireUI.toast.success('Módulo de Usuários aberto! Clique novamente para abrir outra instância.');
+                } else {
+                    SpireUI.toast.error('Taskbar não encontrado. Abra a aba Window Manager primeiro.');
+                }
+            });
+            
+            // Botão: Cadastro de Produtos
+            document.getElementById('btn-register-products')?.addEventListener('click', () => {
+                const taskbar = getTaskbar();
+                if (taskbar && taskbar.openWindow) {
+                    taskbar.openWindow({
+                        title: 'Cadastro de Produtos',
+                        icon: '📦',
+                        width: '650px',
+                        height: '450px',
+                        content: `
+                            <div class="p-4 h-full flex flex-col">
+                                <div class="grid grid-cols-2 gap-4 mb-4">
+                                    <div>
+                                        <label class="block text-sm font-medium mb-1">Nome do Produto</label>
+                                        <input type="text" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium mb-1">Código SKU</label>
+                                        <input type="text" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium mb-1">Preço</label>
+                                        <input type="text" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800" value="R$ 0,00">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium mb-1">Estoque</label>
+                                        <input type="number" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800" value="0">
+                                    </div>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="block text-sm font-medium mb-1">Descrição</label>
+                                    <textarea class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 h-20"></textarea>
+                                </div>
+                                <div class="flex gap-2 justify-end mt-auto">
+                                    <button class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">Cancelar</button>
+                                    <button class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">Salvar Produto</button>
+                                </div>
+                            </div>
+                        `
+                    });
+                    SpireUI.toast.success('Módulo de Produtos aberto!');
+                } else {
+                    SpireUI.toast.error('Taskbar não encontrado. Abra a aba Window Manager primeiro.');
+                }
+            });
+            
+            // Botão: Pedidos
+            document.getElementById('btn-register-orders')?.addEventListener('click', () => {
+                const taskbar = getTaskbar();
+                if (taskbar && taskbar.openWindow) {
+                    taskbar.openWindow({
+                        title: 'Gerenciar Pedidos',
+                        icon: '🛒',
+                        width: '750px',
+                        height: '500px',
+                        content: `
+                            <div class="p-4 h-full flex flex-col">
+                                <div class="flex gap-2 mb-4">
+                                    <select class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800">
+                                        <option>Todos os Status</option>
+                                        <option>Pendente</option>
+                                        <option>Em Processamento</option>
+                                        <option>Enviado</option>
+                                        <option>Entregue</option>
+                                    </select>
+                                    <input type="date" class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800">
+                                    <input type="text" placeholder="Buscar pedido..." class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800">
+                                </div>
+                                <div class="flex-1 overflow-auto border border-gray-200 dark:border-gray-700 rounded-lg">
+                                    <table class="w-full text-sm">
+                                        <thead class="bg-gray-50 dark:bg-gray-800 sticky top-0">
+                                            <tr>
+                                                <th class="px-4 py-2 text-left">#Pedido</th>
+                                                <th class="px-4 py-2 text-left">Cliente</th>
+                                                <th class="px-4 py-2 text-left">Data</th>
+                                                <th class="px-4 py-2 text-right">Total</th>
+                                                <th class="px-4 py-2 text-left">Status</th>
+                                                <th class="px-4 py-2 text-center">Ações</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+                                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-800">
+                                                <td class="px-4 py-2 font-mono">#00123</td>
+                                                <td class="px-4 py-2">João Silva</td>
+                                                <td class="px-4 py-2">04/12/2025</td>
+                                                <td class="px-4 py-2 text-right font-medium">R$ 459,90</td>
+                                                <td class="px-4 py-2"><span class="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded">Processando</span></td>
+                                                <td class="px-4 py-2 text-center">
+                                                    <button class="text-blue-500 hover:underline">Ver</button>
+                                                </td>
+                                            </tr>
+                                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-800">
+                                                <td class="px-4 py-2 font-mono">#00122</td>
+                                                <td class="px-4 py-2">Maria Santos</td>
+                                                <td class="px-4 py-2">03/12/2025</td>
+                                                <td class="px-4 py-2 text-right font-medium">R$ 1.250,00</td>
+                                                <td class="px-4 py-2"><span class="px-2 py-1 text-xs bg-green-100 text-green-700 rounded">Enviado</span></td>
+                                                <td class="px-4 py-2 text-center">
+                                                    <button class="text-blue-500 hover:underline">Ver</button>
+                                                </td>
+                                            </tr>
+                                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-800">
+                                                <td class="px-4 py-2 font-mono">#00121</td>
+                                                <td class="px-4 py-2">Pedro Costa</td>
+                                                <td class="px-4 py-2">02/12/2025</td>
+                                                <td class="px-4 py-2 text-right font-medium">R$ 89,90</td>
+                                                <td class="px-4 py-2"><span class="px-2 py-1 text-xs bg-yellow-100 text-yellow-700 rounded">Pendente</span></td>
+                                                <td class="px-4 py-2 text-center">
+                                                    <button class="text-blue-500 hover:underline">Ver</button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        `
+                    });
+                    SpireUI.toast.success('Módulo de Pedidos aberto!');
+                } else {
+                    SpireUI.toast.error('Taskbar não encontrado. Abra a aba Window Manager primeiro.');
+                }
             });
 
             console.log('🚀 Spire UI 2025 Demo carregado!');

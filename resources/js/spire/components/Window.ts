@@ -19,10 +19,9 @@ export class Window implements WindowInstance {
   #savedState = { x: 0, y: 0, width: 0, height: 0 };
   #minWidth: number;
   #minHeight: number;
-  #boundHandleMouseMove: (e: MouseEvent) => void;
-  #boundHandleMouseUp: () => void;
-  #boundHandleTouchMove: (e: TouchEvent) => void;
-  #boundHandleTouchEnd: () => void;
+  #boundHandlePointerMove: (e: PointerEvent) => void;
+  #boundHandlePointerUp: (e: PointerEvent) => void;
+  #activePointerId: number | null = null;
 
   constructor(el: HTMLElement) {
     this.#el = el;
@@ -30,10 +29,8 @@ export class Window implements WindowInstance {
     this.#minWidth = parseInt(el.dataset.minWidth || '200');
     this.#minHeight = parseInt(el.dataset.minHeight || '150');
 
-    this.#boundHandleMouseMove = this.#handleMouseMove.bind(this);
-    this.#boundHandleMouseUp = this.#handleMouseUp.bind(this);
-    this.#boundHandleTouchMove = this.#handleTouchMove.bind(this);
-    this.#boundHandleTouchEnd = this.#handleTouchEnd.bind(this);
+    this.#boundHandlePointerMove = this.#handlePointerMove.bind(this);
+    this.#boundHandlePointerUp = this.#handlePointerUp.bind(this);
 
     this.#createWindow();
     this.#setupListeners();
@@ -117,17 +114,11 @@ export class Window implements WindowInstance {
     // Focus on click
     this.#el.addEventListener('mousedown', () => this.#bringToFront());
 
-    // Title bar drag
-    this.#titleBar?.addEventListener('mousedown', (e) => {
+    // Title bar drag - use pointerdown for unified mouse/touch handling
+    this.#titleBar?.addEventListener('pointerdown', (e) => {
       if ((e.target as HTMLElement).closest('button')) return;
-      this.#startDrag(e.clientX, e.clientY);
+      this.#startDrag(e);
     });
-
-    this.#titleBar?.addEventListener('touchstart', (e) => {
-      if ((e.target as HTMLElement).closest('button')) return;
-      const touch = e.touches[0];
-      this.#startDrag(touch.clientX, touch.clientY);
-    }, { passive: true });
 
     // Double-click to maximize
     this.#titleBar?.addEventListener('dblclick', (e) => {
@@ -142,35 +133,42 @@ export class Window implements WindowInstance {
     });
     this.#el.querySelector('[data-window-close]')?.addEventListener('click', () => this.close());
 
-    // Resize handles
+    // Resize handles - use pointerdown for unified mouse/touch handling
     this.#el.querySelectorAll('[data-resize]').forEach(handle => {
-      handle.addEventListener('mousedown', (e) => {
+      handle.addEventListener('pointerdown', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        this.#startResize((handle as HTMLElement).dataset.resize || '', e as MouseEvent);
+        this.#startResize((handle as HTMLElement).dataset.resize || '', e as PointerEvent);
       });
     });
-
-    // Global mouse/touch events
-    document.addEventListener('mousemove', this.#boundHandleMouseMove);
-    document.addEventListener('mouseup', this.#boundHandleMouseUp);
-    document.addEventListener('touchmove', this.#boundHandleTouchMove, { passive: false });
-    document.addEventListener('touchend', this.#boundHandleTouchEnd);
   }
 
-  #startDrag(clientX: number, clientY: number): void {
+  #startDrag(e: PointerEvent): void {
     if (this.#isMaximized) return;
+    
+    const target = e.currentTarget as HTMLElement;
+    this.#activePointerId = e.pointerId;
+    target.setPointerCapture(e.pointerId);
     
     this.#isDragging = true;
     this.#dragOffset = {
-      x: clientX - this.#el.offsetLeft,
-      y: clientY - this.#el.offsetTop
+      x: e.clientX - this.#el.offsetLeft,
+      y: e.clientY - this.#el.offsetTop
     };
     this.#el.style.transition = 'none';
+    
+    // Add pointer event listeners to the element that captured
+    target.addEventListener('pointermove', this.#boundHandlePointerMove);
+    target.addEventListener('pointerup', this.#boundHandlePointerUp);
+    target.addEventListener('pointercancel', this.#boundHandlePointerUp);
   }
 
-  #startResize(direction: string, e: MouseEvent): void {
+  #startResize(direction: string, e: PointerEvent): void {
     if (this.#isMaximized) return;
+    
+    const target = e.currentTarget as HTMLElement;
+    this.#activePointerId = e.pointerId;
+    target.setPointerCapture(e.pointerId);
     
     this.#isResizing = true;
     this.#resizeDirection = direction;
@@ -185,21 +183,23 @@ export class Window implements WindowInstance {
     this.#dragOffset = { x: e.clientX, y: e.clientY };
     this.#el.style.transition = 'none';
     this.#bringToFront();
+    
+    // Add pointer event listeners to the element that captured
+    target.addEventListener('pointermove', this.#boundHandlePointerMove);
+    target.addEventListener('pointerup', this.#boundHandlePointerUp);
+    target.addEventListener('pointercancel', this.#boundHandlePointerUp);
   }
 
-  #handleMouseMove(e: MouseEvent): void {
-    if (this.#isDragging) {
-      this.#drag(e.clientX, e.clientY);
-    } else if (this.#isResizing) {
-      this.#resize(e.clientX, e.clientY);
-    }
-  }
-
-  #handleTouchMove(e: TouchEvent): void {
+  #handlePointerMove(e: PointerEvent): void {
+    // Only process events from the pointer that started the drag/resize
+    if (e.pointerId !== this.#activePointerId) return;
+    
     if (this.#isDragging) {
       e.preventDefault();
-      const touch = e.touches[0];
-      this.#drag(touch.clientX, touch.clientY);
+      this.#drag(e.clientX, e.clientY);
+    } else if (this.#isResizing) {
+      e.preventDefault();
+      this.#resize(e.clientX, e.clientY);
     }
   }
 
@@ -289,28 +289,34 @@ export class Window implements WindowInstance {
     if (dir.includes('n')) this.#el.style.top = `${newTop}px`;
   }
 
-  #handleMouseUp(): void {
-    if (this.#isDragging || this.#isResizing) {
-      this.#isDragging = false;
-      this.#isResizing = false;
-      this.#el.style.transition = '';
-      emit(this.#el, 'window:moved', { 
-        x: this.#el.offsetLeft, 
-        y: this.#el.offsetTop,
-        width: this.#el.offsetWidth,
-        height: this.#el.offsetHeight
-      });
+  #handlePointerUp(e: PointerEvent): void {
+    // Only process events from the pointer that started the drag/resize
+    if (e.pointerId !== this.#activePointerId) return;
+    
+    const target = e.currentTarget as HTMLElement;
+    
+    // Release pointer capture
+    if (target.hasPointerCapture(e.pointerId)) {
+      target.releasePointerCapture(e.pointerId);
     }
-  }
-
-  #handleTouchEnd(): void {
-    this.#handleMouseUp();
+    
+    // Remove event listeners
+    target.removeEventListener('pointermove', this.#boundHandlePointerMove);
+    target.removeEventListener('pointerup', this.#boundHandlePointerUp);
+    target.removeEventListener('pointercancel', this.#boundHandlePointerUp);
+    
+    // Reset state
+    this.#isDragging = false;
+    this.#isResizing = false;
+    this.#resizeDirection = '';
+    this.#activePointerId = null;
+    this.#el.style.transition = '';
   }
 
   #bringToFront(): void {
     topZIndex++;
     this.#el.style.zIndex = String(topZIndex);
-    emit(this.#el, 'window:focus', { id: this.#el.id });
+    emit(document.body, 'window:focused', { id: this.#el.id });
   }
 
   minimize(): this {
@@ -436,11 +442,8 @@ export class Window implements WindowInstance {
   }
 
   destroy(): void {
-    document.removeEventListener('mousemove', this.#boundHandleMouseMove);
-    document.removeEventListener('mouseup', this.#boundHandleMouseUp);
-    document.removeEventListener('touchmove', this.#boundHandleTouchMove);
-    document.removeEventListener('touchend', this.#boundHandleTouchEnd);
-    
+    // With pointer capture, listeners are on the individual elements and removed in #handlePointerUp
+    // Just clean up remaining state
     windowInstances.delete(this);
     this.#el.remove();
     instances.delete(this.#el);

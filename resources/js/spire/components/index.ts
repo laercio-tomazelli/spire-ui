@@ -46,3 +46,4 @@ export { Persist } from './Persist';
 // Window Manager
 export { Window, getAllWindows } from './Window';
 export { WindowTaskbar } from './WindowTaskbar';
+export type { RegisteredApp, OpenWindowOptions } from './WindowTaskbar';
