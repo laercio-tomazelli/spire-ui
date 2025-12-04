@@ -1149,42 +1149,8 @@
                                 #demo-sidebar.sidebar-collapsed .sidebar-toggle-btn { margin: 0; }
                                 #demo-sidebar.sidebar-collapsed .sidebar-item { justify-content: center; }
                                 
-                                /* Tooltips - escondidos por padrão */
-                                .sidebar-tooltip {
-                                    position: absolute;
-                                    left: 100%;
-                                    top: 50%;
-                                    transform: translateY(-50%);
-                                    margin-left: 0.75rem;
-                                    padding: 0.375rem 0.75rem;
-                                    background: #f3f4f6;
-                                    color: #374151;
-                                    font-size: 0.75rem;
-                                    font-weight: 500;
-                                    white-space: nowrap;
-                                    border-radius: 0.375rem;
-                                    opacity: 0;
-                                    pointer-events: none;
-                                    transition: opacity 0.15s;
-                                    z-index: 9999;
-                                    box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
-                                    border: 1px solid #e5e7eb;
-                                }
-                                .dark .sidebar-tooltip {
-                                    background: #374151;
-                                    color: #e5e7eb;
-                                    border-color: #4b5563;
-                                }
-                                
-                                /* Esconder tooltip quando sidebar expandida */
-                                #demo-sidebar:not(.sidebar-collapsed) .sidebar-tooltip {
-                                    display: none;
-                                }
-                                
-                                /* Mostrar tooltip no hover quando collapsed */
-                                #demo-sidebar.sidebar-collapsed [data-sidebar-item]:hover > .sidebar-tooltip {
-                                    opacity: 1;
-                                }
+                                /* Tooltips inline - escondidos sempre (usamos JS) */
+                                .sidebar-tooltip { display: none; }
                                 
                                 /* Navbar ajustes quando sidebar collapsed */
                                 #demo-sidebar.sidebar-collapsed ~ #demo-navbar { left: 4rem !important; }
@@ -1266,6 +1232,37 @@
                                     </ul>
                                 </nav>
                             </aside>
+                            
+                            {{-- Tooltip container (fora da sidebar para não ser afetado por overflow) --}}
+                            <div id="sidebar-tooltip-container" class="hidden fixed z-[9999] px-3 py-1.5 text-xs font-medium text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-md shadow-sm whitespace-nowrap pointer-events-none"></div>
+                            
+                            <script>
+                                (function() {
+                                    const sidebar = document.getElementById('demo-sidebar');
+                                    const tooltip = document.getElementById('sidebar-tooltip-container');
+                                    const items = sidebar.querySelectorAll('[data-sidebar-item]');
+                                    
+                                    items.forEach(item => {
+                                        const text = item.querySelector('.sidebar-tooltip')?.textContent || 
+                                                     item.querySelector('.sidebar-item-text')?.textContent || '';
+                                        
+                                        item.addEventListener('mouseenter', (e) => {
+                                            if (!sidebar.classList.contains('sidebar-collapsed')) return;
+                                            
+                                            const rect = item.getBoundingClientRect();
+                                            tooltip.textContent = text;
+                                            tooltip.classList.remove('hidden');
+                                            tooltip.style.left = (rect.right + 8) + 'px';
+                                            tooltip.style.top = (rect.top + rect.height / 2) + 'px';
+                                            tooltip.style.transform = 'translateY(-50%)';
+                                        });
+                                        
+                                        item.addEventListener('mouseleave', () => {
+                                            tooltip.classList.add('hidden');
+                                        });
+                                    });
+                                })();
+                            </script>
 
                             {{-- Navbar --}}
                             <header 
