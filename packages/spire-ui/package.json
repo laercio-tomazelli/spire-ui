@@ -1,0 +1,63 @@
+{
+  "name": "@spire-ui/core",
+  "version": "0.1.0",
+  "description": "Lightweight, zero-dependency TypeScript UI library for Laravel applications",
+  "author": "Laercio Tomazelli",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/spire-ui.cjs",
+  "module": "./dist/spire-ui.js",
+  "types": "./dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/spire-ui.js",
+      "require": "./dist/spire-ui.cjs"
+    },
+    "./global": {
+      "types": "./dist/types/global.d.ts",
+      "import": "./dist/global.js",
+      "require": "./dist/global.cjs"
+    },
+    "./css": "./dist/spire-ui.css"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "ui",
+    "components",
+    "typescript",
+    "laravel",
+    "blade",
+    "alpine-alternative",
+    "lightweight",
+    "zero-dependency"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/laercio-tomazelli/spire-ui.git",
+    "directory": "packages/spire-ui"
+  },
+  "homepage": "https://github.com/laercio-tomazelli/spire-ui#readme",
+  "bugs": {
+    "url": "https://github.com/laercio-tomazelli/spire-ui/issues"
+  },
+  "scripts": {
+    "build": "vite build && npm run build:types",
+    "build:types": "tsc --emitDeclarationOnly --declaration --outDir dist/types",
+    "dev": "vite build --watch",
+    "prepublishOnly": "npm run build"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "vite": "^7.0.7"
+  },
+  "sideEffects": [
+    "./dist/global.js",
+    "./dist/global.cjs",
+    "*.css"
+  ]
+}

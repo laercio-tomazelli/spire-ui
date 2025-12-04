@@ -1,0 +1,13 @@
+# Source files
+src/
+
+# Config files
+tsconfig.json
+vite.config.ts
+
+# Node modules
+node_modules/
+
+# Development
+*.log
+.DS_Store
