@@ -1149,18 +1149,13 @@
                                 #demo-sidebar.sidebar-collapsed .sidebar-toggle-btn { margin: 0; }
                                 #demo-sidebar.sidebar-collapsed .sidebar-item { justify-content: center; }
                                 
-                                /* Tooltips - sempre escondidos quando sidebar expandida */
+                                /* Tooltips - escondidos por padrão */
                                 .sidebar-tooltip {
-                                    display: none;
-                                }
-                                
-                                /* Tooltips laterais no modo collapsed */
-                                #demo-sidebar.sidebar-collapsed .sidebar-tooltip {
-                                    display: block;
                                     position: absolute;
-                                    left: 4.5rem;
+                                    left: 100%;
                                     top: 50%;
                                     transform: translateY(-50%);
+                                    margin-left: 0.75rem;
                                     padding: 0.375rem 0.75rem;
                                     background: #f3f4f6;
                                     color: #374151;
@@ -1175,12 +1170,19 @@
                                     box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
                                     border: 1px solid #e5e7eb;
                                 }
-                                .dark #demo-sidebar.sidebar-collapsed .sidebar-tooltip {
+                                .dark .sidebar-tooltip {
                                     background: #374151;
                                     color: #e5e7eb;
                                     border-color: #4b5563;
                                 }
-                                #demo-sidebar.sidebar-collapsed li.group:hover .sidebar-tooltip {
+                                
+                                /* Esconder tooltip quando sidebar expandida */
+                                #demo-sidebar:not(.sidebar-collapsed) .sidebar-tooltip {
+                                    display: none;
+                                }
+                                
+                                /* Mostrar tooltip no hover quando collapsed */
+                                #demo-sidebar.sidebar-collapsed [data-sidebar-item]:hover > .sidebar-tooltip {
                                     opacity: 1;
                                 }
                                 
