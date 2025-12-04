@@ -1,0 +1,16 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+    paths:
+        - app/
+
+    # Level 0 é o mais permissivo, 9 é o mais rigoroso
+    level: 5
+
+    ignoreErrors:
+        # Ignora erros comuns do Laravel que são falsos positivos
+        # - '#Unsafe usage of new static#'
+
+    excludePaths:
+        - vendor/

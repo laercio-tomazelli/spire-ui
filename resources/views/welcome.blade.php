@@ -5,7 +5,7 @@
     </x-ui.banner>
 
     <div class="container mx-auto px-6 py-12">
-        <h1 class="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+        <h1 class="text-4xl font-bold mb-2 bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
             🚀 Spire UI 2025 - Demo
         </h1>
         <p class="text-gray-600 dark:text-gray-400 mb-8">Biblioteca TypeScript leve (~19KB gzip) para substituir Alpine.js</p>
@@ -2485,7 +2485,7 @@
                             {{-- Custom Trigger --}}
                             <x-ui.dropdown position="bottom-end">
                                 <x-slot:triggerSlot>
-                                    <div class="w-10 h-10 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold cursor-pointer hover:scale-105 transition-transform">
+                                    <div class="w-10 h-10 rounded-full bg-linear-to-r from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold cursor-pointer hover:scale-105 transition-transform">
                                         JD
                                     </div>
                                 </x-slot:triggerSlot>
@@ -2839,31 +2839,6 @@
             });
             document.getElementById('save').addEventListener('button:success', (e) => {
                 console.log('Evento: button:success', e.detail);
-            });
-
-            // ========== INPUTS ==========
-            document.getElementById('validate').addEventListener('click', function() {
-                const fields = [
-                    { el: document.getElementById('name'), msg: 'Nome é obrigatório', validate: v => v.trim().length > 0 },
-                    { el: document.getElementById('email'), msg: 'Email inválido', validate: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) },
-                    { el: document.getElementById('phone'), msg: 'Telefone é obrigatório', validate: v => v.trim().length > 0 }
-                ];
-
-                let hasError = false;
-                fields.forEach(f => {
-                    f.el.$input.error('');
-                    if (!f.validate(f.el.value)) {
-                        f.el.$input.error(f.msg);
-                        if (!hasError) f.el.$input.focus();
-                        hasError = true;
-                    }
-                });
-
-                if (!hasError) {
-                    SpireUI.toast.success('Formulário válido!');
-                } else {
-                    SpireUI.toast.error('Corrija os erros acima');
-                }
             });
 
             // ========== TOASTS ==========
