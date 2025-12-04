@@ -1144,7 +1144,9 @@
                                 #demo-sidebar.sidebar-collapsed .sidebar-item-arrow { opacity: 0; }
                                 #demo-sidebar.sidebar-collapsed [data-submenu] { display: none !important; }
                                 #demo-sidebar.sidebar-collapsed .toggle-icon { transform: rotate(180deg); }
-                                #demo-sidebar.sidebar-collapsed .sidebar-logo-full { opacity: 0; width: 0; overflow: hidden; }
+                                #demo-sidebar.sidebar-collapsed .sidebar-logo-full { display: none; }
+                                #demo-sidebar.sidebar-collapsed .sidebar-header { justify-content: center; }
+                                #demo-sidebar.sidebar-collapsed .sidebar-toggle-btn { margin: 0; }
                                 
                                 /* Navbar ajustes quando sidebar collapsed */
                                 #demo-sidebar.sidebar-collapsed ~ #demo-navbar { left: 4rem !important; }
@@ -1166,9 +1168,9 @@
                                        transition-all duration-300 ease-in-out w-56"
                             >
                                 {{-- Sidebar Header with Logo --}}
-                                <div class="flex items-center justify-between h-12 px-3 border-b border-gray-200 dark:border-gray-700 shrink-0">
+                                <div class="sidebar-header flex items-center justify-between h-12 px-2 border-b border-gray-200 dark:border-gray-700 shrink-0">
                                     <div class="flex items-center gap-2 overflow-hidden sidebar-logo-full transition-all duration-300">
-                                        <div class="w-7 h-7 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold text-xs shrink-0">
+                                        <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold text-xs shrink-0">
                                             S
                                         </div>
                                         <span class="sidebar-item-text font-semibold text-gray-800 dark:text-gray-200 whitespace-nowrap text-sm">
@@ -1178,7 +1180,7 @@
                                     <button 
                                         type="button"
                                         data-sidebar-toggle
-                                        class="p-1 rounded-lg text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                                        class="sidebar-toggle-btn w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                                     >
                                         <svg class="toggle-icon w-4 h-4 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/>
