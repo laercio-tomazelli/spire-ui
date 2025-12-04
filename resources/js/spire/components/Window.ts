@@ -54,7 +54,11 @@ export class Window implements WindowInstance {
     // Wrap existing content
     const existingContent = this.#el.innerHTML;
     
-    this.#el.className = `fixed bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col ${this.#el.className}`;
+    // Use absolute positioning if inside a relative container, otherwise fixed
+    const isInsideRelative = this.#el.closest('.relative') !== null;
+    const positionClass = isInsideRelative ? 'absolute' : 'fixed';
+    
+    this.#el.className = `${positionClass} bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col ${this.#el.className}`;
     this.#el.style.minWidth = `${this.#minWidth}px`;
     this.#el.style.minHeight = `${this.#minHeight}px`;
     
@@ -170,12 +174,15 @@ export class Window implements WindowInstance {
     
     this.#isResizing = true;
     this.#resizeDirection = direction;
+    // Save initial state including position
     this.#savedState = {
-      x: e.clientX,
-      y: e.clientY,
+      x: this.#el.offsetLeft,
+      y: this.#el.offsetTop,
       width: this.#el.offsetWidth,
       height: this.#el.offsetHeight
     };
+    // Store mouse start position separately
+    this.#dragOffset = { x: e.clientX, y: e.clientY };
     this.#el.style.transition = 'none';
     this.#bringToFront();
   }
@@ -209,34 +216,71 @@ export class Window implements WindowInstance {
   }
 
   #resize(clientX: number, clientY: number): void {
-    const dx = clientX - this.#savedState.x;
-    const dy = clientY - this.#savedState.y;
+    // Calculate delta from mouse START position (stored in dragOffset)
+    const dx = clientX - this.#dragOffset.x;
+    const dy = clientY - this.#dragOffset.y;
     const dir = this.#resizeDirection;
 
     let newWidth = this.#savedState.width;
     let newHeight = this.#savedState.height;
-    let newLeft = this.#el.offsetLeft;
-    let newTop = this.#el.offsetTop;
+    let newLeft = this.#savedState.x;
+    let newTop = this.#savedState.y;
+
+    // Get container bounds
+    const container = this.#el.offsetParent as HTMLElement || document.body;
+    const maxWidth = container.clientWidth;
+    const maxHeight = container.clientHeight;
 
     if (dir.includes('e')) {
       newWidth = Math.max(this.#minWidth, this.#savedState.width + dx);
+      // Limit to container right edge
+      newWidth = Math.min(newWidth, maxWidth - newLeft);
     }
+    
     if (dir.includes('w')) {
-      const proposedWidth = this.#savedState.width - dx;
-      if (proposedWidth >= this.#minWidth) {
-        newWidth = proposedWidth;
-        newLeft = this.#el.offsetLeft + dx;
+      let proposedWidth = this.#savedState.width - dx;
+      let proposedLeft = this.#savedState.x + dx;
+      
+      // Clamp to left edge
+      if (proposedLeft < 0) {
+        proposedLeft = 0;
+        proposedWidth = this.#savedState.x + this.#savedState.width;
       }
+      
+      // Ensure minimum width
+      if (proposedWidth < this.#minWidth) {
+        proposedWidth = this.#minWidth;
+        proposedLeft = this.#savedState.x + this.#savedState.width - this.#minWidth;
+      }
+      
+      newWidth = proposedWidth;
+      newLeft = proposedLeft;
     }
+    
     if (dir.includes('s')) {
       newHeight = Math.max(this.#minHeight, this.#savedState.height + dy);
+      // Limit to container bottom edge (leave space for taskbar)
+      newHeight = Math.min(newHeight, maxHeight - newTop - 48);
     }
+    
     if (dir.includes('n')) {
-      const proposedHeight = this.#savedState.height - dy;
-      if (proposedHeight >= this.#minHeight) {
-        newHeight = proposedHeight;
-        newTop = this.#el.offsetTop + dy;
+      let proposedHeight = this.#savedState.height - dy;
+      let proposedTop = this.#savedState.y + dy;
+      
+      // Clamp to top edge
+      if (proposedTop < 0) {
+        proposedTop = 0;
+        proposedHeight = this.#savedState.y + this.#savedState.height;
       }
+      
+      // Ensure minimum height
+      if (proposedHeight < this.#minHeight) {
+        proposedHeight = this.#minHeight;
+        proposedTop = this.#savedState.y + this.#savedState.height - this.#minHeight;
+      }
+      
+      newHeight = proposedHeight;
+      newTop = proposedTop;
     }
 
     this.#el.style.width = `${newWidth}px`;
@@ -373,6 +417,14 @@ export class Window implements WindowInstance {
 
   getTitle(): string {
     return this.#title;
+  }
+
+  getId(): string {
+    return this.#el.id || this.#el.dataset.windowId || '';
+  }
+
+  getElement(): HTMLElement {
+    return this.#el;
   }
 
   isMinimized(): boolean {

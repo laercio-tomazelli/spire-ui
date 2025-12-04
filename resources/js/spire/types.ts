@@ -474,6 +474,8 @@ export interface WindowInstance extends SpireUIInstance {
   focus(): this;
   setTitle(title: string): this;
   getTitle(): string;
+  getId(): string;
+  getElement(): HTMLElement;
   isMinimized(): boolean;
   isMaximized(): boolean;
 }
