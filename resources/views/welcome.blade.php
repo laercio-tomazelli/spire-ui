@@ -1147,6 +1147,8 @@
                                 #demo-sidebar.sidebar-collapsed .sidebar-logo-full { display: none; }
                                 #demo-sidebar.sidebar-collapsed .sidebar-header { justify-content: center; }
                                 #demo-sidebar.sidebar-collapsed .sidebar-toggle-btn { margin: 0; }
+                                #demo-sidebar.sidebar-collapsed .sidebar-item { justify-content: center; padding-left: 0; padding-right: 0; }
+                                #demo-sidebar.sidebar-collapsed nav { padding-left: 0.5rem; padding-right: 0.5rem; }
                                 
                                 /* Navbar ajustes quando sidebar collapsed */
                                 #demo-sidebar.sidebar-collapsed ~ #demo-navbar { left: 4rem !important; }
