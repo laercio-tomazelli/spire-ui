@@ -1140,15 +1140,14 @@
                             {{-- Estilos para sidebar-collapsed --}}
                             <style>
                                 #demo-sidebar.sidebar-collapsed { width: 4rem !important; }
-                                #demo-sidebar.sidebar-collapsed .sidebar-item-text { opacity: 0; width: 0; overflow: hidden; }
-                                #demo-sidebar.sidebar-collapsed .sidebar-item-arrow { opacity: 0; }
+                                #demo-sidebar.sidebar-collapsed .sidebar-item-text { display: none; }
+                                #demo-sidebar.sidebar-collapsed .sidebar-item-arrow { display: none; }
                                 #demo-sidebar.sidebar-collapsed [data-submenu] { display: none !important; }
                                 #demo-sidebar.sidebar-collapsed .toggle-icon { transform: rotate(180deg); }
                                 #demo-sidebar.sidebar-collapsed .sidebar-logo-full { display: none; }
                                 #demo-sidebar.sidebar-collapsed .sidebar-header { justify-content: center; }
                                 #demo-sidebar.sidebar-collapsed .sidebar-toggle-btn { margin: 0; }
-                                #demo-sidebar.sidebar-collapsed .sidebar-item { justify-content: center; padding-left: 0; padding-right: 0; }
-                                #demo-sidebar.sidebar-collapsed nav { padding-left: 0.5rem; padding-right: 0.5rem; }
+                                #demo-sidebar.sidebar-collapsed .sidebar-item { justify-content: center; }
                                 
                                 /* Navbar ajustes quando sidebar collapsed */
                                 #demo-sidebar.sidebar-collapsed ~ #demo-navbar { left: 4rem !important; }
