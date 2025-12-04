@@ -1136,7 +1136,7 @@
                     </div>
                     
                     {{-- Full Width Demo --}}
-                    <div class="relative border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden h-[600px] bg-gray-50 dark:bg-gray-900">
+                    <div class="relative border border-gray-200 dark:border-gray-700 rounded-xl h-[600px] bg-gray-50 dark:bg-gray-900">
                             {{-- Estilos para sidebar-collapsed --}}
                             <style>
                                 #demo-sidebar.sidebar-collapsed { width: 4rem !important; }
@@ -1147,13 +1147,14 @@
                                 #demo-sidebar.sidebar-collapsed .sidebar-logo-full { display: none; }
                                 #demo-sidebar.sidebar-collapsed .sidebar-header { justify-content: center; }
                                 #demo-sidebar.sidebar-collapsed .sidebar-toggle-btn { margin: 0; }
-                                #demo-sidebar.sidebar-collapsed .sidebar-item { justify-content: center; }
+                                #demo-sidebar.sidebar-collapsed .sidebar-item { justify-content: center; position: relative; }
                                 
                                 /* Tooltips laterais no modo collapsed */
                                 #demo-sidebar.sidebar-collapsed .sidebar-item[data-tooltip]::after {
                                     content: attr(data-tooltip);
                                     position: absolute;
-                                    left: calc(100% + 0.5rem);
+                                    left: 100%;
+                                    margin-left: 0.75rem;
                                     top: 50%;
                                     transform: translateY(-50%);
                                     padding: 0.375rem 0.75rem;
@@ -1164,28 +1165,28 @@
                                     white-space: nowrap;
                                     border-radius: 0.375rem;
                                     opacity: 0;
-                                    visibility: hidden;
-                                    transition: opacity 0.15s, visibility 0.15s;
-                                    z-index: 50;
+                                    pointer-events: none;
+                                    transition: opacity 0.15s;
+                                    z-index: 9999;
                                     box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
                                 }
                                 #demo-sidebar.sidebar-collapsed .sidebar-item[data-tooltip]::before {
                                     content: '';
                                     position: absolute;
-                                    left: calc(100% + 0.25rem);
+                                    left: 100%;
+                                    margin-left: 0.25rem;
                                     top: 50%;
                                     transform: translateY(-50%);
-                                    border: 4px solid transparent;
+                                    border: 5px solid transparent;
                                     border-right-color: #1f2937;
                                     opacity: 0;
-                                    visibility: hidden;
-                                    transition: opacity 0.15s, visibility 0.15s;
-                                    z-index: 50;
+                                    pointer-events: none;
+                                    transition: opacity 0.15s;
+                                    z-index: 9999;
                                 }
                                 #demo-sidebar.sidebar-collapsed .sidebar-item[data-tooltip]:hover::after,
                                 #demo-sidebar.sidebar-collapsed .sidebar-item[data-tooltip]:hover::before {
                                     opacity: 1;
-                                    visibility: visible;
                                 }
                                 
                                 /* Navbar ajustes quando sidebar collapsed */
