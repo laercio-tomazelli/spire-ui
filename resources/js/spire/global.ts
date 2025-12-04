@@ -37,6 +37,7 @@ import { Select } from './components/Select';
 import { Skeleton } from './components/Skeleton';
 import { Stepper } from './components/Stepper';
 import { Table } from './components/Table';
+import { Sidebar } from './components/Sidebar';
 import { Tabs } from './components/Tabs';
 import { Tooltip } from './components/Tooltip';
 import { VirtualScroll } from './components/VirtualScroll';
@@ -84,7 +85,8 @@ const Components: Record<string, new (el: HTMLElement) => SpireUIInstance> = {
   virtualscroll: VirtualScroll,
   persist: Persist,
   contextmenu: ContextMenu,
-  carousel: Carousel
+  carousel: Carousel,
+  sidebar: Sidebar
 };
 
 // Command palette singleton
@@ -151,6 +153,32 @@ export const SpireUI: SpireUIAPI = {
     document.querySelectorAll<HTMLElement>('[data-v]').forEach(el => {
       this.destroy(el);
     });
+  },
+
+  // Helper to access collapse by ID
+  collapse(id: string) {
+    const el = document.querySelector<HTMLElement>(`[data-collapse="${id}"]`);
+    if (!el) return null;
+    
+    if (!instances.has(el)) {
+      const instance = new Collapse(el);
+      instances.set(el, instance);
+    }
+    
+    return instances.get(el) as import('./types').CollapseInstance;
+  },
+
+  // Helper to access carousel by ID
+  carousel(id: string) {
+    const el = document.querySelector<HTMLElement>(`[data-carousel="${id}"]`);
+    if (!el) return null;
+    
+    if (!instances.has(el)) {
+      const instance = new Carousel(el);
+      instances.set(el, instance);
+    }
+    
+    return instances.get(el) as import('./types').CarouselInstance;
   },
 
   // Utilities

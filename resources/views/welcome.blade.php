@@ -25,6 +25,7 @@
                 <x-ui.tab name="forms">Forms</x-ui.tab>
                 <x-ui.tab name="pickers">Pickers</x-ui.tab>
                 <x-ui.tab name="utilities">Utilities</x-ui.tab>
+                <x-ui.tab name="sidebar">Sidebar</x-ui.tab>
                 <x-ui.tab name="extras">Extras</x-ui.tab>
             </x-slot:tabs>
 
@@ -1115,6 +1116,219 @@
                             <p class="text-xs text-gray-500">
                                 Usuários de leitores de tela ouvirão o anúncio.
                             </p>
+                        </div>
+                    </div>
+                </div>
+            </x-ui.tab-panel>
+
+            {{-- Panel: Sidebar --}}
+            <x-ui.tab-panel name="sidebar">
+                <div class="grid gap-8 lg:grid-cols-2">
+                    {{-- Sidebar Demo Preview --}}
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
+                        <h2 class="text-xl font-bold mb-6">📁 Sidebar Interativa</h2>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                            Menu lateral com múltiplos níveis, modo recolhido e animações suaves.
+                        </p>
+                        
+                        {{-- Inline Sidebar Demo --}}
+                        <div class="relative border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden h-[500px] bg-gray-50 dark:bg-gray-900">
+                            {{-- Mini sidebar inside the demo box --}}
+                            <aside 
+                                id="demo-sidebar"
+                                data-v="sidebar"
+                                data-persist="demo"
+                                class="sidebar absolute inset-y-0 left-0 flex flex-col
+                                       bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700
+                                       transition-all duration-300 ease-in-out
+                                       w-56 sidebar-collapsed:w-16"
+                            >
+                                {{-- Header --}}
+                                <div class="flex items-center justify-between h-14 px-3 border-b border-gray-200 dark:border-gray-700 shrink-0">
+                                    <div class="flex items-center gap-2 overflow-hidden">
+                                        <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold text-sm shrink-0">
+                                            S
+                                        </div>
+                                        <span class="sidebar-item-text font-semibold text-gray-800 dark:text-gray-200 whitespace-nowrap transition-all duration-300">
+                                            SpireUI
+                                        </span>
+                                    </div>
+                                    <button 
+                                        type="button"
+                                        data-sidebar-toggle
+                                        class="p-1.5 rounded-lg text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                                    >
+                                        <svg class="w-4 h-4 transition-transform duration-300 sidebar-collapsed:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/>
+                                        </svg>
+                                    </button>
+                                </div>
+
+                                {{-- Navigation --}}
+                                <nav class="flex-1 overflow-y-auto overflow-x-hidden py-3 px-2">
+                                    <ul class="space-y-1">
+                                        {{-- Dashboard --}}
+                                        <li data-sidebar-item="dashboard">
+                                            <a href="#" class="sidebar-item group flex items-center w-full px-2.5 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200">
+                                                <span class="shrink-0 w-5 h-5 text-gray-500">
+                                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                                                </span>
+                                                <span class="sidebar-item-text ml-2.5 text-sm whitespace-nowrap transition-all duration-300">Dashboard</span>
+                                            </a>
+                                        </li>
+
+                                        {{-- Products with submenu --}}
+                                        <li data-sidebar-item="products" class="relative">
+                                            <button type="button" data-submenu-trigger class="sidebar-item group flex items-center w-full px-2.5 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200">
+                                                <span class="shrink-0 w-5 h-5 text-gray-500">
+                                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+                                                </span>
+                                                <span class="sidebar-item-text ml-2.5 text-sm whitespace-nowrap transition-all duration-300">Produtos</span>
+                                                <svg data-arrow class="sidebar-item-arrow ml-auto w-4 h-4 text-gray-400 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                                </svg>
+                                            </button>
+                                            <ul data-submenu class="hidden mt-1 ml-4 pl-3 border-l-2 border-gray-200 dark:border-gray-600 space-y-1">
+                                                <li><a href="#" class="block px-2.5 py-1.5 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">Todos</a></li>
+                                                <li><a href="#" class="block px-2.5 py-1.5 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">Categorias</a></li>
+                                                <li><a href="#" class="block px-2.5 py-1.5 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">Estoque</a></li>
+                                            </ul>
+                                        </li>
+
+                                        {{-- Users with submenu --}}
+                                        <li data-sidebar-item="users" class="relative">
+                                            <button type="button" data-submenu-trigger class="sidebar-item group flex items-center w-full px-2.5 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200">
+                                                <span class="shrink-0 w-5 h-5 text-gray-500">
+                                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                                                </span>
+                                                <span class="sidebar-item-text ml-2.5 text-sm whitespace-nowrap transition-all duration-300">Usuários</span>
+                                                <svg data-arrow class="sidebar-item-arrow ml-auto w-4 h-4 text-gray-400 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                                </svg>
+                                            </button>
+                                            <ul data-submenu class="hidden mt-1 ml-4 pl-3 border-l-2 border-gray-200 dark:border-gray-600 space-y-1">
+                                                <li><a href="#" class="block px-2.5 py-1.5 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">Lista</a></li>
+                                                <li><a href="#" class="block px-2.5 py-1.5 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">Roles</a></li>
+                                                <li><a href="#" class="block px-2.5 py-1.5 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">Permissões</a></li>
+                                            </ul>
+                                        </li>
+
+                                        {{-- Settings --}}
+                                        <li data-sidebar-item="settings">
+                                            <a href="#" class="sidebar-item group flex items-center w-full px-2.5 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200">
+                                                <span class="shrink-0 w-5 h-5 text-gray-500">
+                                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                                </span>
+                                                <span class="sidebar-item-text ml-2.5 text-sm whitespace-nowrap transition-all duration-300">Configurações</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+
+                                {{-- Footer --}}
+                                <div class="shrink-0 border-t border-gray-200 dark:border-gray-700 p-2">
+                                    <a href="#" class="sidebar-item group flex items-center px-2.5 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200">
+                                        <span class="shrink-0 w-5 h-5 text-gray-500">
+                                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                                        </span>
+                                        <span class="sidebar-item-text ml-2.5 text-sm whitespace-nowrap transition-all duration-300">Sair</span>
+                                    </a>
+                                </div>
+                            </aside>
+
+                            {{-- Content area --}}
+                            <div class="absolute inset-0 left-56 sidebar-collapsed:left-16 transition-all duration-300 p-6 flex items-center justify-center" id="demo-content">
+                                <div class="text-center">
+                                    <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                                        <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"/>
+                                        </svg>
+                                    </div>
+                                    <p class="text-gray-500 dark:text-gray-400 text-sm">Área de conteúdo</p>
+                                    <p class="text-gray-400 dark:text-gray-500 text-xs mt-1">Clique no botão de toggle para recolher</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Features & Code --}}
+                    <div class="space-y-6">
+                        {{-- Features --}}
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
+                            <h2 class="text-xl font-bold mb-6">✨ Recursos</h2>
+                            <ul class="space-y-3">
+                                <li class="flex items-start gap-3">
+                                    <span class="text-green-500 mt-0.5">✓</span>
+                                    <span class="text-gray-600 dark:text-gray-400 text-sm"><strong>Modo Recolhido:</strong> Toggle suave entre largura total e só ícones</span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="text-green-500 mt-0.5">✓</span>
+                                    <span class="text-gray-600 dark:text-gray-400 text-sm"><strong>Submenus Multinível:</strong> Animação deslizante ao expandir/recolher</span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="text-green-500 mt-0.5">✓</span>
+                                    <span class="text-gray-600 dark:text-gray-400 text-sm"><strong>Persistência:</strong> Estado salvo no localStorage</span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="text-green-500 mt-0.5">✓</span>
+                                    <span class="text-gray-600 dark:text-gray-400 text-sm"><strong>Responsivo:</strong> Drawer em mobile com overlay</span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="text-green-500 mt-0.5">✓</span>
+                                    <span class="text-gray-600 dark:text-gray-400 text-sm"><strong>Acessível:</strong> ARIA labels e navegação por teclado</span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="text-green-500 mt-0.5">✓</span>
+                                    <span class="text-gray-600 dark:text-gray-400 text-sm"><strong>Tooltips:</strong> Labels aparecem ao passar o mouse no modo recolhido</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        {{-- API --}}
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
+                            <h2 class="text-xl font-bold mb-6">🔧 API JavaScript</h2>
+                            <div class="bg-gray-900 rounded-xl p-4 text-sm font-mono overflow-x-auto">
+                                <pre class="text-gray-300"><code><span class="text-purple-400">const</span> <span class="text-blue-300">sidebar</span> = <span class="text-yellow-300">SpireUI</span>.<span class="text-green-300">get</span>(<span class="text-orange-300">el</span>);
+
+<span class="text-gray-500">// Toggle recolher/expandir</span>
+<span class="text-blue-300">sidebar</span>.<span class="text-green-300">toggle</span>();
+<span class="text-blue-300">sidebar</span>.<span class="text-green-300">collapse</span>();
+<span class="text-blue-300">sidebar</span>.<span class="text-green-300">expand</span>();
+
+<span class="text-gray-500">// Mobile</span>
+<span class="text-blue-300">sidebar</span>.<span class="text-green-300">openMobile</span>();
+<span class="text-blue-300">sidebar</span>.<span class="text-green-300">closeMobile</span>();
+
+<span class="text-gray-500">// Submenus</span>
+<span class="text-blue-300">sidebar</span>.<span class="text-green-300">openSubmenu</span>(<span class="text-orange-300">'products'</span>);
+<span class="text-blue-300">sidebar</span>.<span class="text-green-300">closeAllSubmenus</span>();
+
+<span class="text-gray-500">// Verificar estado</span>
+<span class="text-blue-300">sidebar</span>.<span class="text-green-300">isCollapsed</span>(); <span class="text-gray-500">// true/false</span></code></pre>
+                            </div>
+                        </div>
+
+                        {{-- Events --}}
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
+                            <h2 class="text-xl font-bold mb-6">📡 Eventos</h2>
+                            <ul class="space-y-2 text-sm font-mono">
+                                <li class="flex items-center gap-2">
+                                    <span class="px-2 py-0.5 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded">sidebar:collapse</span>
+                                    <span class="text-gray-500">→ Sidebar recolhida</span>
+                                </li>
+                                <li class="flex items-center gap-2">
+                                    <span class="px-2 py-0.5 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded">sidebar:expand</span>
+                                    <span class="text-gray-500">→ Sidebar expandida</span>
+                                </li>
+                                <li class="flex items-center gap-2">
+                                    <span class="px-2 py-0.5 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded">sidebar:submenu-open</span>
+                                    <span class="text-gray-500">→ Submenu aberto</span>
+                                </li>
+                                <li class="flex items-center gap-2">
+                                    <span class="px-2 py-0.5 bg-orange-100 dark:bg-orange-900 text-orange-700 dark:text-orange-300 rounded">sidebar:submenu-close</span>
+                                    <span class="text-gray-500">→ Submenu fechado</span>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>
