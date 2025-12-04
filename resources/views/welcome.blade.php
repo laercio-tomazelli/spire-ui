@@ -1337,7 +1337,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
 
                     {{-- Features, API & Events in horizontal layout --}}
                     <div class="grid gap-6 lg:grid-cols-3">
