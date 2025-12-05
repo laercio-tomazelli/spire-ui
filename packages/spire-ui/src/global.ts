@@ -208,9 +208,38 @@ export const SpireUI: SpireUIAPI = {
 // =====================
 // AUTO INITIALIZATION
 // =====================
-['DOMContentLoaded', 'livewire:navigated', 'turbo:render', 'astro:page-load'].forEach(ev => 
-  document.addEventListener(ev, () => setTimeout(SpireUI.init, 10))
+let isInitialized = false;
+
+function initAndNotify(): void {
+  SpireUI.init();
+  
+  // Emit ready event only on first init
+  if (!isInitialized) {
+    isInitialized = true;
+    document.dispatchEvent(new CustomEvent('spire:ready', { 
+      detail: { SpireUI },
+      bubbles: true 
+    }));
+  }
+  
+  // Always emit init event (useful for re-initialization)
+  document.dispatchEvent(new CustomEvent('spire:init', { 
+    detail: { SpireUI },
+    bubbles: true 
+  }));
+}
+
+// Listen to various framework navigation events
+['DOMContentLoaded', 'livewire:navigated', 'livewire:initialized', 'turbo:render', 'turbo:load', 'astro:page-load'].forEach(ev => 
+  document.addEventListener(ev, () => setTimeout(initAndNotify, 10))
 );
+
+// Listen to Livewire morphing for dynamic content
+if (typeof window !== 'undefined' && (window as any).Livewire) {
+  (window as any).Livewire.hook('morph.updated', () => {
+    setTimeout(SpireUI.init, 10);
+  });
+}
 
 // =====================
 // THEME TOGGLE

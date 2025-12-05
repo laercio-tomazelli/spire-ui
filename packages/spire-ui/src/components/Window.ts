@@ -55,7 +55,7 @@ export class Window implements WindowInstance {
     const isInsideRelative = this.#el.closest('.relative') !== null;
     const positionClass = isInsideRelative ? 'absolute' : 'fixed';
     
-    this.#el.className = `${positionClass} bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col ${this.#el.className}`;
+    this.#el.className = `${positionClass} bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 flex flex-col ${this.#el.className}`;
     this.#el.style.minWidth = `${this.#minWidth}px`;
     this.#el.style.minHeight = `${this.#minHeight}px`;
     
@@ -92,18 +92,22 @@ export class Window implements WindowInstance {
           </button>
         </div>
       </div>
-      <div data-window-content class="flex-1 overflow-auto p-4">
+      <div data-window-content class="flex-1 overflow-auto p-2" style="position: relative; z-index: 1;">
         ${existingContent}
       </div>
-      <!-- Resize handles -->
-      <div data-resize="n" class="absolute top-0 left-2 right-2 h-1 cursor-n-resize"></div>
-      <div data-resize="s" class="absolute bottom-0 left-2 right-2 h-1 cursor-s-resize"></div>
-      <div data-resize="e" class="absolute top-2 bottom-2 right-0 w-1 cursor-e-resize"></div>
-      <div data-resize="w" class="absolute top-2 bottom-2 left-0 w-1 cursor-w-resize"></div>
-      <div data-resize="nw" class="absolute top-0 left-0 w-3 h-3 cursor-nw-resize"></div>
-      <div data-resize="ne" class="absolute top-0 right-0 w-3 h-3 cursor-ne-resize"></div>
-      <div data-resize="sw" class="absolute bottom-0 left-0 w-3 h-3 cursor-sw-resize"></div>
-      <div data-resize="se" class="absolute bottom-0 right-0 w-3 h-3 cursor-se-resize"></div>
+      <!-- Resize handles - large hit areas for easy interaction -->
+      <div data-resize="n" style="position: absolute; top: 0; left: 12px; right: 12px; height: 8px; cursor: ns-resize; z-index: 100;"></div>
+      <div data-resize="s" style="position: absolute; bottom: 0; left: 12px; right: 12px; height: 8px; cursor: ns-resize; z-index: 100;"></div>
+      <div data-resize="e" style="position: absolute; top: 40px; right: 0; bottom: 12px; width: 8px; cursor: ew-resize; z-index: 100;"></div>
+      <div data-resize="w" style="position: absolute; top: 40px; left: 0; bottom: 12px; width: 8px; cursor: ew-resize; z-index: 100;"></div>
+      <div data-resize="nw" style="position: absolute; top: 0; left: 0; width: 12px; height: 40px; cursor: nwse-resize; z-index: 110;"></div>
+      <div data-resize="nw" style="position: absolute; top: 0; left: 0; width: 40px; height: 12px; cursor: nwse-resize; z-index: 110;"></div>
+      <div data-resize="ne" style="position: absolute; top: 0; right: 0; width: 12px; height: 40px; cursor: nesw-resize; z-index: 110;"></div>
+      <div data-resize="ne" style="position: absolute; top: 0; right: 0; width: 40px; height: 12px; cursor: nesw-resize; z-index: 110;"></div>
+      <div data-resize="sw" style="position: absolute; bottom: 0; left: 0; width: 12px; height: 40px; cursor: nesw-resize; z-index: 110;"></div>
+      <div data-resize="sw" style="position: absolute; bottom: 0; left: 0; width: 40px; height: 12px; cursor: nesw-resize; z-index: 110;"></div>
+      <div data-resize="se" style="position: absolute; bottom: 0; right: 0; width: 12px; height: 40px; cursor: nwse-resize; z-index: 110;"></div>
+      <div data-resize="se" style="position: absolute; bottom: 0; right: 0; width: 40px; height: 12px; cursor: nwse-resize; z-index: 110;"></div>
     `;
 
     this.#titleBar = this.#el.querySelector('[data-window-titlebar]');
@@ -157,6 +161,9 @@ export class Window implements WindowInstance {
     };
     this.#el.style.transition = 'none';
     
+    // Disable pointer events on iframes during drag (they steal events)
+    this.#disableIframePointerEvents();
+    
     // Add pointer event listeners to the element that captured
     target.addEventListener('pointermove', this.#boundHandlePointerMove);
     target.addEventListener('pointerup', this.#boundHandlePointerUp);
@@ -183,6 +190,9 @@ export class Window implements WindowInstance {
     this.#dragOffset = { x: e.clientX, y: e.clientY };
     this.#el.style.transition = 'none';
     this.#bringToFront();
+    
+    // Disable pointer events on iframes during resize (they steal events)
+    this.#disableIframePointerEvents();
     
     // Add pointer event listeners to the element that captured
     target.addEventListener('pointermove', this.#boundHandlePointerMove);
@@ -311,6 +321,21 @@ export class Window implements WindowInstance {
     this.#resizeDirection = '';
     this.#activePointerId = null;
     this.#el.style.transition = '';
+    
+    // Re-enable pointer events on iframes
+    this.#enableIframePointerEvents();
+  }
+  
+  #disableIframePointerEvents(): void {
+    this.#el.querySelectorAll('iframe').forEach(iframe => {
+      iframe.style.pointerEvents = 'none';
+    });
+  }
+  
+  #enableIframePointerEvents(): void {
+    this.#el.querySelectorAll('iframe').forEach(iframe => {
+      iframe.style.pointerEvents = '';
+    });
   }
 
   #bringToFront(): void {

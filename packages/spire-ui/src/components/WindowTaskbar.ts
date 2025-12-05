@@ -51,6 +51,10 @@ export interface OpenWindowOptions {
   onLoad?: (windowEl: HTMLElement, contentEl: HTMLElement) => void;
 }
 
+export interface WindowTaskbarOptions {
+  onReady?: (taskbar: WindowTaskbar) => void;
+}
+
 export class WindowTaskbar implements WindowTaskbarInstance {
   #el: HTMLElement;
   #items: Map<string, TaskbarItem> = new Map();
@@ -63,15 +67,28 @@ export class WindowTaskbar implements WindowTaskbarInstance {
   #searchQuery = '';
   #instanceCounter = 0;
   #arrangeMode: 'none' | 'cascade' | 'tile' = 'none';
+  #options: WindowTaskbarOptions;
 
-  constructor(el: HTMLElement) {
+  constructor(el: HTMLElement, options?: WindowTaskbarOptions) {
     this.#el = el;
+    this.#options = options || {};
     this.#initDefaultApps();
     this.#createTaskbar();
     this.#setupDesktopContextMenu();
     this.#setupListeners();
     this.#discoverExistingWindows();
     instances.set(el, this);
+    
+    // Emit ready event on element
+    el.dispatchEvent(new CustomEvent('taskbar:ready', { 
+      detail: { taskbar: this },
+      bubbles: true 
+    }));
+    
+    // Call onReady callback if provided
+    if (this.#options.onReady) {
+      this.#options.onReady(this);
+    }
   }
 
   // ========== PUBLIC API ==========
@@ -146,12 +163,31 @@ export class WindowTaskbar implements WindowTaskbarInstance {
     newWindow.style.left = `${options.x ?? (50 + offset)}px`;
     newWindow.style.top = `${options.y ?? (50 + offset)}px`;
     
-    // Create content container
-    const contentHtml = options.url 
-      ? `<iframe src="${options.url}" class="w-full h-full border-0" frameborder="0"></iframe>`
-      : options.content 
-        ? `<div class="w-full h-full overflow-auto">${options.content}</div>`
-        : `<div class="flex items-center justify-center h-full text-gray-400"><span class="text-4xl">${options.icon || '📄'}</span></div>`;
+    // Create content container with loading skeleton for iframes
+    let contentHtml: string;
+    if (options.url) {
+      const loadingId = `loading-${windowId}`;
+      contentHtml = `
+        <div id="${loadingId}" class="absolute inset-0 flex flex-col items-center justify-center bg-white dark:bg-gray-800 z-10">
+          <div class="animate-spin rounded-full h-10 w-10 border-4 border-gray-200 dark:border-gray-700 border-t-blue-500"></div>
+          <p class="mt-3 text-sm text-gray-500 dark:text-gray-400">Carregando...</p>
+        </div>
+        <iframe 
+          src="${options.url}" 
+          class="w-full h-full border-0 opacity-0 transition-opacity duration-300" 
+          frameborder="0"
+          onload="
+            this.classList.remove('opacity-0');
+            this.classList.add('opacity-100');
+            var loading = document.getElementById('${loadingId}');
+            if (loading) loading.remove();
+          "
+        ></iframe>`;
+    } else if (options.content) {
+      contentHtml = `<div class="w-full h-full overflow-auto">${options.content}</div>`;
+    } else {
+      contentHtml = `<div class="flex items-center justify-center h-full text-gray-400"><span class="text-4xl">${options.icon || '📄'}</span></div>`;
+    }
     
     newWindow.innerHTML = contentHtml;
     container.appendChild(newWindow);
