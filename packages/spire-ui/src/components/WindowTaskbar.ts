@@ -66,7 +66,7 @@ export class WindowTaskbar implements WindowTaskbarInstance {
   #appLaunchers: AppLauncher[] = [];
   #searchQuery = '';
   #instanceCounter = 0;
-  #arrangeMode: 'none' | 'cascade' | 'tile' = 'none';
+  #arrangeMode: 'free' | 'cascade' | 'tile' = 'free';
   #options: WindowTaskbarOptions;
 
   constructor(el: HTMLElement, options?: WindowTaskbarOptions) {
@@ -680,8 +680,13 @@ export class WindowTaskbar implements WindowTaskbarInstance {
         const item = this.#items.get(id);
         if (item) {
           if (item.minimized) {
+            // Janela minimizada: restaurar e focar
             item.instance.restore();
+          } else if (item.instance.isFocused()) {
+            // Janela já está em foco (acima de todas): minimizar
+            item.instance.minimize();
           } else {
+            // Janela não está em foco: trazer para frente
             item.instance.focus();
           }
         }
@@ -697,9 +702,10 @@ export class WindowTaskbar implements WindowTaskbarInstance {
   #setupDesktopContextMenu(): void {
     const container = this.#el.closest('.relative') || document.body;
     
-    // Create context menu
+    // Create context menu - use fixed position and append to body for proper z-index
     this.#contextMenu = document.createElement('div');
-    this.#contextMenu.className = 'hidden absolute bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 py-1 min-w-48 z-[99999]';
+    this.#contextMenu.className = 'hidden fixed bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 py-1 min-w-48';
+    this.#contextMenu.style.zIndex = '999999';
     this.#contextMenu.innerHTML = `
       <button data-action="minimize-all" class="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-3">
         <span class="text-base">⬇️</span> Minimizar todas
@@ -708,10 +714,13 @@ export class WindowTaskbar implements WindowTaskbarInstance {
         <span class="text-base">⬆️</span> Restaurar todas
       </button>
       <div class="border-t border-gray-200 dark:border-gray-600 my-1"></div>
-      <button data-action="cascade" class="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-3">
+      <button data-action="free" class="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-3" data-mode-option>
+        <span class="text-base">🔓</span> Modo livre
+      </button>
+      <button data-action="cascade" class="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-3" data-mode-option>
         <span class="text-base">📑</span> Organizar em cascata
       </button>
-      <button data-action="tile" class="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-3">
+      <button data-action="tile" class="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-3" data-mode-option>
         <span class="text-base">⊞</span> Organizar lado a lado
       </button>
       <div class="border-t border-gray-200 dark:border-gray-600 my-1"></div>
@@ -719,17 +728,19 @@ export class WindowTaskbar implements WindowTaskbarInstance {
         <span class="text-base">✕</span> Fechar todas
       </button>
     `;
-    container.appendChild(this.#contextMenu);
+    // Append to body instead of container for proper stacking
+    document.body.appendChild(this.#contextMenu);
     
-    // Listen for right-click on desktop (container)
+    // Listen for right-click on desktop (container) - not on windows or taskbar items
     container.addEventListener('contextmenu', (e) => {
       const target = e.target as HTMLElement;
-      // Only show if clicking on desktop background, not on windows or taskbar
-      if (target === container || target.closest('[data-v="window-taskbar"]')) {
-        if (!target.closest('[data-v="window"]') && !target.closest('[data-taskbar-app-menu]')) {
-          e.preventDefault();
-          this.#showContextMenu(e as MouseEvent);
-        }
+      // Show on desktop background OR on taskbar, but not on windows or app menu
+      const isOnWindow = target.closest('[data-v="window"]');
+      const isOnAppMenu = target.closest('[data-taskbar-app-menu]');
+      
+      if (!isOnWindow && !isOnAppMenu) {
+        e.preventDefault();
+        this.#showContextMenu(e as MouseEvent);
       }
     });
     
@@ -752,21 +763,19 @@ export class WindowTaskbar implements WindowTaskbarInstance {
   #showContextMenu(e: MouseEvent): void {
     if (!this.#contextMenu) return;
     
-    const container = this.#el.closest('.relative') as HTMLElement || document.body;
-    const rect = container.getBoundingClientRect();
+    // Use viewport coordinates since menu is fixed position
+    let x = e.clientX;
+    let y = e.clientY;
     
-    let x = e.clientX - rect.left;
-    let y = e.clientY - rect.top;
-    
-    // Ensure menu stays within bounds
+    // Ensure menu stays within viewport
     this.#contextMenu.classList.remove('hidden');
     const menuRect = this.#contextMenu.getBoundingClientRect();
     
-    if (x + menuRect.width > rect.width) {
-      x = rect.width - menuRect.width - 8;
+    if (x + menuRect.width > window.innerWidth) {
+      x = window.innerWidth - menuRect.width - 8;
     }
-    if (y + menuRect.height > rect.height - 48) { // 48 = taskbar height
-      y = rect.height - menuRect.height - 56;
+    if (y + menuRect.height > window.innerHeight - 48) { // 48 = taskbar height
+      y = window.innerHeight - menuRect.height - 56;
     }
     
     this.#contextMenu.style.left = `${x}px`;
@@ -789,16 +798,41 @@ export class WindowTaskbar implements WindowTaskbarInstance {
         windows.forEach(w => w.instance.close());
         break;
         
+      case 'free':
+        this.#arrangeMode = 'free';
+        this.#updateModeIndicator();
+        break;
+        
       case 'cascade':
         this.#arrangeMode = 'cascade';
         this.#arrangeWindowsCascade();
+        this.#updateModeIndicator();
         break;
         
       case 'tile':
         this.#arrangeMode = 'tile';
         this.#arrangeWindowsTile();
+        this.#updateModeIndicator();
         break;
     }
+  }
+  
+  #updateModeIndicator(): void {
+    if (!this.#contextMenu) return;
+    
+    // Update visual indicator for current mode
+    this.#contextMenu.querySelectorAll('[data-mode-option]').forEach(btn => {
+      const btnAction = (btn as HTMLElement).dataset.action;
+      const isActive = btnAction === this.#arrangeMode;
+      
+      if (isActive) {
+        btn.classList.add('bg-blue-50', 'dark:bg-blue-900/30', 'text-blue-700', 'dark:text-blue-300');
+        btn.classList.remove('text-gray-700', 'dark:text-gray-200');
+      } else {
+        btn.classList.remove('bg-blue-50', 'dark:bg-blue-900/30', 'text-blue-700', 'dark:text-blue-300');
+        btn.classList.add('text-gray-700', 'dark:text-gray-200');
+      }
+    });
   }
   
   #arrangeWindowsCascade(): void {

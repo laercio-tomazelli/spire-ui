@@ -466,6 +466,12 @@ export class Window implements WindowInstance {
     return this.#isMaximized;
   }
 
+  isFocused(): boolean {
+    // Check if this window has the highest z-index among all visible windows
+    const myZIndex = parseInt(this.#el.style.zIndex || '0', 10);
+    return myZIndex === topZIndex && !this.#isMinimized;
+  }
+
   destroy(): void {
     // With pointer capture, listeners are on the individual elements and removed in #handlePointerUp
     // Just clean up remaining state
